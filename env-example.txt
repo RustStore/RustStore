@@ -1,0 +1,20 @@
+# Webhook Configuration
+WEBHOOK_SECRET=your_secure_webhook_secret_here
+
+# Discord Bot Configuration
+DISCORD_BOT_TOKEN=your_discord_bot_token_here
+DISCORD_GUILD_ID=your_discord_server_id_here
+DISCORD_CHANNEL_ID=your_channel_id_here
+
+# GPortal RCON Configuration
+RCON_HOST=your_gportal_server_ip_here
+RCON_PORT=28016
+RCON_PASSWORD=your_rcon_password_here
+
+# Payment Configuration (Personal Accounts)
+PAYPAL_EMAIL=your_paypal_email@example.com
+CASHAPP_TAG=$YourCashtag
+
+# Server Configuration
+PORT=3000
+NODE_ENV=production 

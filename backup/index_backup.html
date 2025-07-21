@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust Console Store - Premium Gaming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Rajdhani', sans-serif; }
+        .orbitron { font-family: 'Orbitron', monospace; }
+        
+        /* Body and HTML setup */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000;
+            overflow-x: hidden;
+        }
+        
+        html {
+            overflow-x: hidden;
+        }
+        
+        /* Top Bar - RUST STORE */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+            padding: 1.5rem 0;
+            border-bottom: 2px solid #ffd700;
+        }
+        
+        .top-bar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        
+        .store-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin: 0;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Bottom Bar - Store Sections */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1001;
+            padding: 1.5rem 0;
+            border-top: 2px solid #ffd700;
+        }
+        
+        .bottom-bar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .store-section {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .store-section:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: #ffd700;
+            color: #ffd700;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        /* VIP Card Container - No animations */
+        .vip-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            transform: scale(1);
+        }
+        
+        .vip-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Shimmer animation for VIP cards */
+        .vip-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: left 0.8s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .vip-card:hover::before {
+            left: 100%;
+        }
+        
+        /* Icon pulse animation */
+        .vip-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .vip-card:hover .vip-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+        }
+        
+        /* Price glow effect */
+        .vip-price {
+            transition: all 0.3s ease;
+        }
+        
+        .vip-card:hover .vip-price {
+            text-shadow: 0 0 15px currentColor;
+        }
+        
+        /* Button enhancement on card hover */
+        .vip-card:hover .vip-button {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Border glow effect */
+        .vip-card {
+            border-width: 2px;
+            border-style: solid;
+            transition: all 0.4s ease, border-color 0.3s ease;
+        }
+        
+        .vip-card:hover {
+            border-width: 3px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px currentColor;
+        }
+        
+        /* Feature list animation */
+        .vip-features li {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        
+        .vip-card:hover .vip-features li {
+            transform: translateX(5px);
+        }
+        
+        .vip-card:hover .vip-features li:nth-child(odd) {
+            transform: translateX(-5px);
+        }
+        
+        /* Package image enhancement */
+        .package-image {
+            transition: all 0.4s ease;
+        }
+        
+        .vip-card:hover .package-image {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        
+        /* Card content subtle animation */
+        .vip-card > div:last-child {
+            transition: all 0.3s ease;
+        }
+        
+        .vip-card:hover > div:last-child {
+            transform: translateY(-5px);
+        }
+        
+        /* Purchase Button - No animations */
+        .vip-button {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vip-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .vip-button:active {
+            transform: translateY(-1px) scale(1.01);
+            transition: all 0.1s ease;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .store-title {
+                font-size: 2rem;
+            }
+            
+            .bottom-bar-content {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .store-section {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+            
+            .vip-title {
+                font-size: 2rem !important;
+            }
+            
+            .vip-packages {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+        }
+        
+        @media (max-width: 1200px) and (min-width: 769px) {
+            .vip-packages {
+                grid-template-columns: repeat(3, 1fr) !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Top Bar - RUST STORE -->
+    <nav class="top-bar">
+        <div class="top-bar-content">
+            <h1 class="store-title">RUST STORE</h1>
+        </div>
+    </nav>
+
+    <!-- Full Screen Background YouTube Video -->
+    <div id="youtube-background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0.8; pointer-events: none;">
+        <iframe 
+            id="youtube-video"
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/2IZshrjPzB4?autoplay=1&mute=1&loop=1&playlist=2IZshrjPzB4&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&origin=http://localhost:3000" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            style="pointer-events: none;">
+        </iframe>
+    </div>
+
+    <!-- Store Section -->
+    <div class="store-section" id="storeSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.2s ease-out;">
+        <div class="store-container" style="max-width: 1200px; margin: 0 auto;">
+            <!-- Store Header -->
+            <div class="store-header" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="store-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                    <i class="fas fa-shopping-cart" style="margin-right: 1rem;"></i>STORE ITEMS
+                </h2>
+                <p class="store-subtitle" style="font-size: 1.2rem; color: #fff; max-width: 600px; margin: 0 auto; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);">
+                    Browse our selection of premium items and kits for the ultimate Rust experience
+                </p>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" style="display: none; text-align: center; padding: 2rem;">
+                <div style="display: inline-block; width: 50px; height: 50px; border: 3px solid rgba(255, 215, 0, 0.3); border-radius: 50%; border-top-color: #ffd700; animation: spin 1s ease-in-out infinite;"></div>
+                <p style="color: #fff; margin-top: 1rem;">Loading store items...</p>
+            </div>
+
+            <!-- Store Items Grid -->
+            <div id="storeItems" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <!-- Store items will be loaded here by JavaScript -->
+            </div>
+
+            <!-- User Authentication Section -->
+            <div class="auth-section" style="text-align: center; margin-top: 2rem;">
+                <div id="authSection" style="display: block;">
+                    <button id="loginBtn" class="store-section" style="margin-right: 1rem;">
+                        <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login
+                    </button>
+                    <button id="registerBtn" class="store-section">
+                        <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Register
+                    </button>
+                </div>
+                <div id="userSection" style="display: none;">
+                    <span id="username" style="color: #ffd700; font-weight: 600; margin-right: 1rem;"></span>
+                    <button id="cartBtn" class="store-section" style="margin-right: 1rem;">
+                        <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Cart <span id="cartCount" style="background: #ffd700; color: #000; padding: 0.2rem 0.5rem; border-radius: 50%; font-size: 0.8rem;">0</span>
+                    </button>
+                    <button id="logoutBtn" class="store-section">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Section -->
+    <div class="vip-section" id="vipSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out;">
+        <div class="vip-container" style="max-width: 1200px; margin: 0 auto;">
+            <!-- VIP Header -->
+            <div class="vip-header" style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="vip-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                    <i class="fas fa-crown" style="margin-right: 1rem;"></i>VIP PACKAGES
+                </h2>
+                <p class="vip-subtitle" style="font-size: 1.2rem; color: #fff; max-width: 600px; margin: 0 auto; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);">
+                    Unlock exclusive benefits, priority support, and premium features for the ultimate Rust experience
+                </p>
+            </div>
+
+            <!-- VIP Packages Grid -->
+            <div class="vip-packages" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; margin-bottom: 3rem; position: relative; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                
+                <!-- VIP Package -->
+                <div class="vip-card vip" style="background: rgba(0, 0, 0, 0.9); border: 2px solid #00ff88; border-radius: 20px; padding: 0; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(0, 255, 136, 0.2); overflow: hidden;">
+                    <!-- Package Image -->
+                    <div class="package-image" style="height: 250px; background: linear-gradient(135deg, #00ff88, #00cc6a); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; opacity: 0.8;"></div>
+                        <div style="position: relative; z-index: 2; text-align: center;">
+                            <div class="vip-icon" style="font-size: 4rem; color: #fff; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <h3 class="vip-name" style="font-size: 2.5rem; color: #fff; margin: 0; font-weight: 700; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">VIP</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Package Content -->
+                    <div style="padding: 2rem;">
+                        <div class="vip-price" style="font-size: 3rem; color: #00ff88; margin-bottom: 1.5rem; font-weight: 700;">
+                            $14.99
+                            <span style="font-size: 1.2rem; color: #ccc;">/month</span>
+                        </div>
+                        
+                        <div class="package-contents" style="background: rgba(0, 255, 136, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(0, 255, 136, 0.3);">
+                            <h4 style="color: #00ff88; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 600;">
+                                <i class="fas fa-medal" style="margin-right: 0.5rem;"></i>VIP Benefits:
+                            </h4>
+                            <ul class="vip-features" style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(0, 255, 136, 0.2);">
+                                    <i class="fas fa-check" style="color: #00ff88; margin-right: 0.8rem;"></i>Priority Queue Access
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(0, 255, 136, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #00ff88; margin-right: 0.8rem;"></i>monthly building kit
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #00ff88; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-monthly" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(0, 255, 136, 0.2);">
+                                    <i class="fas fa-check" style="color: #00ff88; margin-right: 0.8rem;"></i>Chips
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(0, 255, 136, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #00ff88; margin-right: 0.8rem;"></i>Starter Kit
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #00ff88; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-starter" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff;">
+                                    <i class="fas fa-check" style="color: #00ff88; margin-right: 0.8rem;"></i>Discord Role
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <button class="vip-button vip-btn vip-purchase-btn" style="background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; color: #000; padding: 1.2rem 2rem; border-radius: 30px; font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 1px;" data-tier="vip" data-price="1499">
+                            <i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase VIP
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VIP+ Package -->
+                <div class="vip-card vip-plus" style="background: rgba(0, 0, 0, 0.9); border: 2px solid #ff6b35; border-radius: 20px; padding: 0; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2); overflow: hidden;">
+                    
+                    <!-- Package Image -->
+                    <div class="package-image" style="height: 250px; background: linear-gradient(135deg, #ff6b35, #ff8c42); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; opacity: 0.8;"></div>
+                        <div style="position: relative; z-index: 2; text-align: center;">
+                            <div class="vip-icon" style="font-size: 4rem; color: #fff; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3 class="vip-name" style="font-size: 2.5rem; color: #fff; margin: 0; font-weight: 700; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">VIP+</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Package Content -->
+                    <div style="padding: 2rem;">
+                        <div class="vip-price" style="font-size: 3rem; color: #ff6b35; margin-bottom: 1.5rem; font-weight: 700;">
+                            $29.99
+                            <span style="font-size: 1.2rem; color: #ccc;">/month</span>
+                        </div>
+                        
+                        <div class="package-contents" style="background: rgba(255, 107, 53, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255, 107, 53, 0.3);">
+                            <h4 style="color: #ff6b35; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 600;">
+                                <i class="fas fa-star" style="margin-right: 0.5rem;"></i>VIP Benefits:
+                            </h4>
+                            <ul class="vip-features" style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 107, 53, 0.2);">
+                                    <i class="fas fa-check" style="color: #ff6b35; margin-right: 0.8rem;"></i>Priority Queue Access
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 107, 53, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #ff6b35; margin-right: 0.8rem;"></i>monthly building kit +
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #ff6b35; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-plus-monthly" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 107, 53, 0.2);">
+                                    <i class="fas fa-check" style="color: #ff6b35; margin-right: 0.8rem;"></i>Chips
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 107, 53, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #ff6b35; margin-right: 0.8rem;"></i>starter kit +
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #ff6b35; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-plus-starter" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 107, 53, 0.2);">
+                                    <i class="fas fa-check" style="color: #ff6b35; margin-right: 0.8rem;"></i>Discord Role
+                                </li>
+                        </div>
+                        
+                        <button class="vip-button vip-plus-btn vip-purchase-btn" style="background: linear-gradient(45deg, #ff6b35, #ff8c42); border: none; color: #fff; padding: 1.2rem 2rem; border-radius: 30px; font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 1px;" data-tier="vip_plus" data-price="2999">
+                            <i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase VIP+
+                        </button>
+                    </div>
+                </div>
+
+                <!-- VIP++ Package -->
+                <div class="vip-card vip-plus-plus" style="background: rgba(0, 0, 0, 0.9); border: 2px solid #ffd700; border-radius: 20px; padding: 0; text-align: center; backdrop-filter: blur(15px); box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2); overflow: hidden;">
+                    <!-- Package Image -->
+                    <div class="package-image" style="height: 250px; background: linear-gradient(135deg, #ffd700, #ffed4e); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover; opacity: 0.8;"></div>
+                        <div style="position: relative; z-index: 2; text-align: center;">
+                            <div class="vip-icon" style="font-size: 4rem; color: #fff; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <h3 class="vip-name" style="font-size: 2.5rem; color: #fff; margin: 0; font-weight: 700; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);">VIP++</h3>
+                        </div>
+                    </div>
+                    
+                    <!-- Package Content -->
+                    <div style="padding: 2rem;">
+                        <div class="vip-price" style="font-size: 3rem; color: #ffd700; margin-bottom: 1.5rem; font-weight: 700;">
+                            $49.99
+                            <span style="font-size: 1.2rem; color: #ccc;">/month</span>
+                        </div>
+                        
+                        <div class="package-contents" style="background: rgba(255, 215, 0, 0.1); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255, 215, 0, 0.3);">
+                            <h4 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 600;">
+                                <i class="fas fa-crown" style="margin-right: 0.5rem;"></i>VIP Benefits:
+                            </h4>
+                            <ul class="vip-features" style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
+                                    <i class="fas fa-check" style="color: #ffd700; margin-right: 0.8rem;"></i>Priority Queue Access
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #ffd700; margin-right: 0.8rem;"></i>monthly building kit ++
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #ffd700; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-plus-plus-monthly" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
+                                    <i class="fas fa-check" style="color: #ffd700; margin-right: 0.8rem;"></i>chips
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 215, 0, 0.2); display: flex; align-items: center; justify-content: space-between;">
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="fas fa-check" style="color: #ffd700; margin-right: 0.8rem;"></i>Starter Kit ++
+                                    </div>
+                                    <i class="fas fa-info-circle kit-info-btn" style="color: #ffd700; cursor: pointer; margin-left: 0.5rem; font-size: 1.1rem;" data-kit="vip-plus-plus-starter" title="Click for details"></i>
+                                </li>
+                                <li style="padding: 0.8rem 0; color: #fff; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
+                                    <i class="fas fa-check" style="color: #ffd700; margin-right: 0.8rem;"></i>Discord Role
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <button class="vip-button vip-plus-plus-btn vip-purchase-btn" style="background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1.2rem 2rem; border-radius: 30px; font-size: 1.2rem; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; letter-spacing: 1px;" data-tier="vip_plus_plus" data-price="4999">
+                            <i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase VIP++
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIP Benefits Section -->
+            <div class="vip-benefits" style="background: rgba(0, 0, 0, 0.9); border-radius: 15px; padding: 2rem; margin-top: 2rem; backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.3);">
+                <h3 style="text-align: center; font-size: 2rem; color: #ffd700; margin-bottom: 2rem;">
+                    <i class="fas fa-gift" style="margin-right: 1rem;"></i>VIP EXCLUSIVE BENEFITS
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div style="text-align: center; padding: 1rem;">
+                        <i class="fas fa-rocket" style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Priority Queue</h4>
+                        <p style="color: #ccc; font-size: 0.9rem;">Skip the line and join instantly when server is full</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem;">
+                        <i class="fas fa-headset" style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Priority Support</h4>
+                        <p style="color: #ccc; font-size: 0.9rem;">Get help faster with dedicated VIP support</p>
+                    </div>
+                    <div style="text-align: center; padding: 1rem;">
+                        <i class="fas fa-coins" style="font-size: 2rem; color: #ffd700; margin-bottom: 1rem;"></i>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Extra Bounty Benefit</h4>
+                        <p style="color: #ccc; font-size: 0.9rem;">Earn additional rewards and bonuses as VIP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Bar - Store Sections -->
+    <nav class="bottom-bar">
+        <div class="bottom-bar-content">
+            <a href="javascript:void(0)" class="store-section">VIP</a>
+            <a href="javascript:void(0)" class="store-section">Resources Kits</a>
+            <a href="javascript:void(0)" class="store-section">War Kits</a>
+            <a href="javascript:void(0)" class="store-section">Vehicle Kits</a>
+            <a href="javascript:void(0)" class="store-section">Resource Kits</a>
+            <a href="javascript:void(0)" class="store-section">Gun Kits</a>
+        </div>
+    </nav>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 15px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="color: #ffd700; font-size: 1.5rem; margin: 0;">
+                    <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Shopping Cart
+                </h3>
+                <button id="closeCart" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="cartItems" style="margin-bottom: 1.5rem;">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div style="border-top: 1px solid rgba(255, 215, 0, 0.3); padding-top: 1rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="color: #fff; font-size: 1.2rem;">Total:</span>
+                    <span id="cartTotal" style="color: #ffd700; font-size: 1.5rem; font-weight: 700;">$0.00</span>
+                </div>
+                <button id="checkoutBtn" style="width: 100%; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+                    <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 15px; padding: 2rem; max-width: 400px; width: 90%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 id="authTitle" style="color: #ffd700; font-size: 1.5rem; margin: 0;">Login</h3>
+                <button id="closeAuth" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="authForm">
+                <div style="margin-bottom: 1rem;">
+                    <label for="email" style="display: block; color: #fff; margin-bottom: 0.5rem;">Email:</label>
+                    <input type="email" id="email" required style="width: 100%; padding: 0.8rem; border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px; background: rgba(0, 0, 0, 0.5); color: #fff; box-sizing: border-box;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="password" style="display: block; color: #fff; margin-bottom: 0.5rem;">Password:</label>
+                    <input type="password" id="password" required style="width: 100%; padding: 0.8rem; border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px; background: rgba(0, 0, 0, 0.5); color: #fff; box-sizing: border-box;">
+                </div>
+                <button type="submit" id="authSubmit" style="width: 100%; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
+                    Login
+                </button>
+            </form>
+            <div style="text-align: center; margin-top: 1rem;">
+                <button id="toggleAuth" style="background: none; border: none; color: #ffd700; cursor: pointer; text-decoration: underline;">
+                    Don't have an account? Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIP Purchase Modal -->
+    <div id="vipPurchaseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; backdrop-filter: blur(10px); opacity: 0; transition: all 0.5s ease;">
+        <div id="vipModalContent" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5); max-width: 90vw; max-height: 90vh; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <!-- Modal content will be dynamically inserted here -->
+        </div>
+        <button id="closeVipModal" style="position: absolute; top: 20px; right: 30px; background: none; border: none; color: #ffd700; font-size: 2rem; cursor: pointer; z-index: 3001; opacity: 0; transition: opacity 0.3s ease;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Kit Information Modal -->
+    <div id="kitInfoModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; backdrop-filter: blur(5px);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 15px; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 id="kitInfoTitle" style="color: #ffd700; font-size: 1.5rem; margin: 0;">
+                    <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>Kit Information
+                </h3>
+                <button id="closeKitInfo" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="kitInfoContent" style="color: #fff;">
+                <!-- Kit information will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

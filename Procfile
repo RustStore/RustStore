@@ -1,0 +1,1 @@
+web: node automated-server.js 
