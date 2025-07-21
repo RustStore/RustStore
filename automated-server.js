@@ -192,26 +192,38 @@ class AutomatedServer {
 
     // Initialize Discord bot
     initDiscordBot() {
-        this.discordClient = new Client({
-            intents: [
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.MessageContent
-            ]
-        });
+        // Check if Discord token is valid
+        if (!this.discordConfig.token || this.discordConfig.token === 'your_discord_bot_token' || this.discordConfig.token === 'placeholder_token') {
+            console.log('⚠️ Discord bot token not configured - Discord features disabled');
+            console.log('💡 To enable Discord: Set DISCORD_BOT_TOKEN environment variable');
+            return;
+        }
 
-        this.discordClient.on('ready', () => {
-            console.log(`Discord bot logged in as ${this.discordClient.user.tag}`);
-        });
+        try {
+            this.discordClient = new Client({
+                intents: [
+                    GatewayIntentBits.Guilds,
+                    GatewayIntentBits.GuildMessages,
+                    GatewayIntentBits.MessageContent
+                ]
+            });
 
-        this.discordClient.on('messageCreate', async (message) => {
-            if (message.author.bot) return;
-            if (message.guild.id !== this.discordConfig.guildId) return;
+            this.discordClient.on('ready', () => {
+                console.log(`🤖 Discord bot logged in as ${this.discordClient.user.tag}`);
+            });
 
-            await this.handleDiscordMessage(message);
-        });
+            this.discordClient.on('messageCreate', async (message) => {
+                if (message.author.bot) return;
+                if (message.guild.id !== this.discordConfig.guildId) return;
 
-        this.discordClient.login(this.discordConfig.token);
+                await this.handleDiscordMessage(message);
+            });
+
+            this.discordClient.login(this.discordConfig.token);
+        } catch (error) {
+            console.log('⚠️ Discord bot failed to initialize:', error.message);
+            console.log('💡 Discord features will be disabled');
+        }
     }
 
     // Handle Discord messages
@@ -370,6 +382,11 @@ class AutomatedServer {
     // Send Discord notification
     async sendDiscordNotification(paymentData) {
         try {
+            if (!this.discordClient) {
+                console.log('💬 Discord not available - skipping notification');
+                return;
+            }
+            
             const channel = this.discordClient.channels.cache.get(this.discordConfig.channelId);
             if (channel) {
                 await channel.send({
@@ -489,8 +506,10 @@ class AutomatedServer {
             console.log(`🚀 Automated server running on port ${port}`);
             console.log(`🏥 Health check: http://localhost:${port}/health`);
             console.log(`🔗 Webhook endpoint: http://localhost:${port}/webhook`);
-            console.log(`🤖 Discord bot: ${this.discordConfig.token ? 'Configured' : 'Not configured'}`);
+            console.log(`🤖 Discord bot: ${this.discordClient ? 'Connected' : 'Disabled'}`);
             console.log(`🎮 RCON: ${this.rconConfig.host !== 'your_gportal_server_ip' ? 'Configured' : 'Not configured'}`);
+            console.log(`💳 Payment system: Ready`);
+            console.log(`✅ Server is ready to receive payments!`);
         });
     }
 }
