@@ -42,7 +42,8 @@ class AutomatedServer {
         
         this.setupMiddleware();
         this.setupRoutes();
-        this.initDiscordBot();
+        // Temporarily disable Discord bot to prevent crashes
+        // this.initDiscordBot();
     }
 
     setupMiddleware() {
@@ -506,10 +507,11 @@ class AutomatedServer {
             console.log(`🚀 Automated server running on port ${port}`);
             console.log(`🏥 Health check: http://localhost:${port}/health`);
             console.log(`🔗 Webhook endpoint: http://localhost:${port}/webhook`);
-            console.log(`🤖 Discord bot: ${this.discordClient ? 'Connected' : 'Disabled'}`);
+            console.log(`🤖 Discord bot: Disabled (temporarily)`);
             console.log(`🎮 RCON: ${this.rconConfig.host !== 'your_gportal_server_ip' ? 'Configured' : 'Not configured'}`);
             console.log(`💳 Payment system: Ready`);
             console.log(`✅ Server is ready to receive payments!`);
+            console.log(`🌐 Server URL: https://store-zad0.onrender.com`);
         });
     }
 }
