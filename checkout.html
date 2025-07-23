@@ -269,7 +269,7 @@
             document.getElementById('total').textContent = `$${(price / 100).toFixed(2)}`;
         }
 
-        // Payment toggle function
+        // Payment toggle function - independent toggles
         function togglePayment(method) {
             const paypalContent = document.getElementById('paypal-content');
             const stripeContent = document.getElementById('stripe-content');
@@ -277,7 +277,7 @@
             const stripeArrow = document.getElementById('stripe-arrow');
 
             if (method === 'paypal') {
-                // Toggle PayPal
+                // Toggle PayPal independently
                 const isPaypalExpanded = paypalContent.classList.contains('payment-expanded');
                 
                 if (isPaypalExpanded) {
@@ -286,18 +286,13 @@
                     paypalContent.classList.add('payment-collapsed');
                     paypalArrow.style.transform = '';
                 } else {
-                    // Expand PayPal, collapse Stripe
+                    // Expand PayPal
                     paypalContent.classList.remove('payment-collapsed');
                     paypalContent.classList.add('payment-expanded');
                     paypalArrow.style.transform = 'rotate(180deg)';
-                    
-                    // Collapse Stripe
-                    stripeContent.classList.remove('payment-expanded');
-                    stripeContent.classList.add('payment-collapsed');
-                    stripeArrow.style.transform = '';
                 }
             } else if (method === 'stripe') {
-                // Toggle Stripe
+                // Toggle Stripe independently
                 const isStripeExpanded = stripeContent.classList.contains('payment-expanded');
                 
                 if (isStripeExpanded) {
@@ -306,15 +301,10 @@
                     stripeContent.classList.add('payment-collapsed');
                     stripeArrow.style.transform = '';
                 } else {
-                    // Expand Stripe, collapse PayPal
+                    // Expand Stripe
                     stripeContent.classList.remove('payment-collapsed');
                     stripeContent.classList.add('payment-expanded');
                     stripeArrow.style.transform = 'rotate(180deg)';
-                    
-                    // Collapse PayPal
-                    paypalContent.classList.remove('payment-expanded');
-                    paypalContent.classList.add('payment-collapsed');
-                    paypalArrow.style.transform = '';
                 }
             }
         }
