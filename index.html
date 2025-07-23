@@ -305,7 +305,10 @@
     <div class="store-section" id="storeSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.2s ease-out;">
         <div class="store-container" style="max-width: 1200px; margin: 0 auto;">
             <!-- Store Header -->
-            <div class="store-header" style="text-align: center; margin-bottom: 3rem;">
+            <div class="store-header" style="text-align: center; margin-bottom: 3rem; position: relative;">
+                <button onclick="hideAllSections()" style="position: absolute; top: 0; right: 0; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Close
+                </button>
                 <h2 class="store-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
                     <i class="fas fa-shopping-cart" style="margin-right: 1rem;"></i>STORE ITEMS
                 </h2>
@@ -358,7 +361,10 @@
     <div class="vip-section" id="vipSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out;">
         <div class="vip-container" style="max-width: 1200px; margin: 0 auto;">
             <!-- VIP Header -->
-            <div class="vip-header" style="text-align: center; margin-bottom: 3rem;">
+            <div class="vip-header" style="text-align: center; margin-bottom: 3rem; position: relative;">
+                <button onclick="hideAllSections()" style="position: absolute; top: 0; right: 0; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Close
+                </button>
                 <h2 class="vip-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
                     <i class="fas fa-crown" style="margin-right: 1rem;"></i>VIP PACKAGES
                 </h2>
@@ -566,7 +572,10 @@
     <div class="resource-kits-section" id="resourceKitsSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out;">
         <div class="resource-kits-container" style="max-width: 1200px; margin: 0 auto;">
             <!-- Resource Kits Header -->
-            <div class="resource-kits-header" style="text-align: center; margin-bottom: 3rem;">
+            <div class="resource-kits-header" style="text-align: center; margin-bottom: 3rem; position: relative;">
+                <button onclick="hideAllSections()" style="position: absolute; top: 0; right: 0; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Close
+                </button>
                 <h2 class="resource-kits-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
                     <i class="fas fa-boxes" style="margin-right: 1rem;"></i>RESOURCE KITS
                 </h2>
@@ -580,8 +589,8 @@
                 
                 <!-- Wood Kit -->
                 <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #8B4513, #A0522D); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-tree" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos resource kits/Wood.png" alt="Wood Bundle" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Wood Bundle</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">Essential wood for building your base</p>
@@ -598,8 +607,8 @@
 
                 <!-- Stone Kit -->
                 <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #696969, #808080); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-mountain" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos resource kits/Stone.png" alt="Stone Bundle" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Stone Bundle</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">Strong stone for foundations</p>
@@ -616,8 +625,8 @@
 
                 <!-- Metal Kit -->
                 <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #C0C0C0, #D3D3D3); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-cog" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos resource kits/Metal Fragments.png" alt="Metal Fragments" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Metal Fragments</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">Advanced building materials</p>
@@ -639,7 +648,10 @@
     <div class="raiding-kits-section" id="raidingKitsSection" style="position: relative; z-index: 10; padding: 120px 20px 120px 20px; min-height: calc(100vh - 240px); background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(5px); display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-out;">
         <div class="raiding-kits-container" style="max-width: 1200px; margin: 0 auto;">
             <!-- Raiding Kits Header -->
-            <div class="raiding-kits-header" style="text-align: center; margin-bottom: 3rem;">
+            <div class="raiding-kits-header" style="text-align: center; margin-bottom: 3rem; position: relative;">
+                <button onclick="hideAllSections()" style="position: absolute; top: 0; right: 0; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Close
+                </button>
                 <h2 class="raiding-kits-title" style="font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
                     <i class="fas fa-rocket" style="margin-right: 1rem;"></i>RAIDING KITS
                 </h2>
@@ -653,8 +665,8 @@
                 
                 <!-- C4 Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #FF0000, #DC143C); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-bomb" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos raiding kits/C4.png" alt="C4 Explosives" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">C4 Explosives</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">High-powered explosives for raiding</p>
@@ -671,8 +683,8 @@
 
                 <!-- Rocket Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #FF4500, #FF6347); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-rocket" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Launcher" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Rocket Launcher</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">Devastating rocket launcher kit</p>
@@ -689,8 +701,8 @@
 
                 <!-- Satchel Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 0, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #8B0000, #B22222); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-fire" style="font-size: 3rem; color: #fff;"></i>
+                    <div style="width: 120px; height: 120px; margin: 0 auto 1rem; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="photos raiding kits/Satchel-Charge.png" alt="Satchel Charges" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Satchel Charges</h3>
                     <p style="color: #ccc; margin-bottom: 1rem;">Explosive satchel charges</p>
