@@ -290,6 +290,9 @@
                     paypalContent.classList.remove('payment-collapsed');
                     paypalContent.classList.add('payment-expanded');
                     paypalArrow.style.transform = 'rotate(180deg)';
+                    
+                    // Initialize PayPal when expanded
+                    setTimeout(initializePayPal, 100);
                 }
             } else if (method === 'stripe') {
                 // Toggle Stripe independently
@@ -305,6 +308,9 @@
                     stripeContent.classList.remove('payment-collapsed');
                     stripeContent.classList.add('payment-expanded');
                     stripeArrow.style.transform = 'rotate(180deg)';
+                    
+                    // Initialize Stripe when expanded
+                    setTimeout(initializeStripe, 100);
                 }
             }
         }
@@ -412,10 +418,10 @@
             }
         }
 
-        // Initialize Stripe when Stripe option is clicked
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize PayPal
-            if (typeof paypal !== 'undefined') {
+        // Initialize PayPal function
+        function initializePayPal() {
+            const container = document.getElementById('paypal-button-container');
+            if (container && typeof paypal !== 'undefined' && !container.hasChildNodes()) {
                 paypal.Buttons({
                     createOrder: function(data, actions) {
                         const userId = getCurrentUserId();
@@ -442,7 +448,10 @@
                     }
                 }).render('#paypal-button-container');
             }
+        }
 
+        // Initialize Stripe when Stripe option is clicked
+        document.addEventListener('DOMContentLoaded', function() {
             // Add click listener for Stripe initialization
             document.querySelector('[onclick="togglePayment(\'stripe\')"]').addEventListener('click', function() {
                 setTimeout(initializeStripe, 100); // Small delay to ensure DOM is ready
