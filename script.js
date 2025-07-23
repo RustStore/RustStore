@@ -530,7 +530,7 @@ function setupNavigation() {
     const vipSection = document.getElementById('vipSection');
     const resourceKitsSection = document.getElementById('resourceKitsSection');
     const raidingKitsSection = document.getElementById('raidingKitsSection');
-    const navButtons = document.querySelectorAll('.bottom-bar .store-section[data-section]');
+    const navButtons = document.querySelectorAll('[data-section]');
     
     // Check if sections exist
     if (!storeSection) {
@@ -568,9 +568,9 @@ function setupNavigation() {
 }
 
 function hideAllSections() {
-    const sections = ['storeSection', 'vipSection', 'resourceKitsSection', 'raidingKitsSection'];
-    sections.forEach(sectionId => {
-        const section = document.getElementById(sectionId);
+    const sections = ['store', 'vip', 'resourceKits', 'raidingKits'];
+    sections.forEach(sectionName => {
+        const section = document.getElementById(sectionName + 'Section');
         if (section) {
             hideSection(section);
         }
@@ -587,9 +587,12 @@ function hideSection(section) {
     }
 }
 
-function showSection(sectionId) {
-    const targetSection = document.getElementById(sectionId);
-    if (!targetSection) return;
+function showSection(sectionName) {
+    const targetSection = document.getElementById(sectionName + 'Section');
+    if (!targetSection) {
+        console.warn('Section not found:', sectionName + 'Section');
+        return;
+    }
     
     hideAllSections();
     
