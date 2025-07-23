@@ -41,11 +41,16 @@ const elements = {
     authSection: document.getElementById('authSection'),
     username: document.getElementById('username'),
     userInfoBtn: document.getElementById('userInfoBtn'),
+    termsBtn: document.getElementById('termsBtn'),
     termsModal: document.getElementById('termsModal'),
     termsContent: document.getElementById('termsContent'),
+    privacyModal: document.getElementById('privacyModal'),
+    privacyContent: document.getElementById('privacyContent'),
     closeTerms: document.getElementById('closeTerms'),
     acceptTerms: document.getElementById('acceptTerms'),
     declineTerms: document.getElementById('declineTerms'),
+    closePrivacy: document.getElementById('closePrivacy'),
+    closePrivacyBtn: document.getElementById('closePrivacyBtn'),
     userInfoModal: document.getElementById('userInfoModal'),
     userInfoForm: document.getElementById('userInfoForm'),
     userEmail: document.getElementById('userEmail'),
@@ -64,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     setupNavigation();
     loadTermsContent();
+    loadPrivacyContent();
 });
 
 function initializeApp() {
@@ -122,9 +128,71 @@ function loadTermsContent() {
     }
 }
 
+function loadPrivacyContent() {
+    const privacyText = `
+        <h3 style="color: #ffd700; margin-bottom: 1rem;">Privacy Policy</h3>
+        <p>This Privacy Policy explains how we collect, use, and protect your information.</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">1. Information We Collect</h4>
+        <p><strong>Personal Information:</strong> Email address, Discord username, in-game username</p>
+        <p><strong>Payment Information:</strong> Processed securely by PayPal and Stripe (we don't store card details)</p>
+        <p><strong>Technical Information:</strong> IP address, browser type, device information</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">2. How We Use Your Information</h4>
+        <p>• Process your purchases and payments</p>
+        <p>• Deliver digital items to your in-game account</p>
+        <p>• Send order confirmation emails</p>
+        <p>• Provide customer support</p>
+        <p>• Prevent fraud and ensure security</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">3. Information Sharing</h4>
+        <p>We do NOT sell or share your personal information with third parties except:</p>
+        <p>• Payment processors (PayPal, Stripe) for payment processing</p>
+        <p>• Game server administrators for item delivery</p>
+        <p>• Law enforcement if required by law</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">4. Data Security</h4>
+        <p>• SSL encryption for all data transmission</p>
+        <p>• Secure payment processing</p>
+        <p>• Regular security audits</p>
+        <p>• Access controls and authentication</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">5. Your Rights</h4>
+        <p>• Request a copy of your data</p>
+        <p>• Update or correct your information</p>
+        <p>• Delete your account</p>
+        <p>• Opt out of communications</p>
+        
+        <h4 style="color: #ffd700; margin: 1rem 0 0.5rem 0;">6. Data Retention</h4>
+        <p>• Order information: 7 years (for tax purposes)</p>
+        <p>• Account information: Until account deletion</p>
+        <p>• Payment data: Not stored by us</p>
+        
+        <p style="margin-top: 2rem; padding: 1rem; background: rgba(0, 255, 0, 0.1); border-radius: 10px; border-left: 4px solid #00ff00;">
+            <strong>We are committed to protecting your privacy and ensuring your data is secure.</strong>
+        </p>
+    `;
+    
+    if (elements.privacyContent) {
+        elements.privacyContent.innerHTML = privacyText;
+    }
+}
+
 function showTermsModal() {
     if (elements.termsModal) {
         elements.termsModal.style.display = 'block';
+    }
+}
+
+function showPrivacyModal() {
+    if (elements.privacyModal) {
+        elements.privacyModal.style.display = 'block';
+    }
+}
+
+function hidePrivacyModal() {
+    if (elements.privacyModal) {
+        elements.privacyModal.style.display = 'none';
     }
 }
 
@@ -358,6 +426,9 @@ function setupEventListeners() {
     if (elements.userInfoBtn) {
         elements.userInfoBtn.addEventListener('click', showUserInfoModal);
     }
+    if (elements.termsBtn) {
+        elements.termsBtn.addEventListener('click', showTermsModal);
+    }
     if (elements.closeAuth) {
         elements.closeAuth.addEventListener('click', hideAuthModal);
     }
@@ -377,6 +448,12 @@ function setupEventListeners() {
     }
     if (elements.declineTerms) {
         elements.declineTerms.addEventListener('click', declineTerms);
+    }
+    if (elements.closePrivacy) {
+        elements.closePrivacy.addEventListener('click', hidePrivacyModal);
+    }
+    if (elements.closePrivacyBtn) {
+        elements.closePrivacyBtn.addEventListener('click', hidePrivacyModal);
     }
     
     // User info functionality

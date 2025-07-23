@@ -343,6 +343,9 @@
                     <button id="cartBtn" class="store-section" style="margin-right: 1rem;">
                         <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Cart <span id="cartCount" style="background: #ffd700; color: #000; padding: 0.2rem 0.5rem; border-radius: 50%; font-size: 0.8rem;">0</span>
                     </button>
+                    <button id="termsBtn" class="store-section" style="margin-right: 1rem;">
+                        <i class="fas fa-file-contract" style="margin-right: 0.5rem;"></i>Terms
+                    </button>
                     <button id="logoutBtn" class="store-section">
                         <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
                     </button>
@@ -750,6 +753,50 @@
 
 
     
+    <!-- Footer -->
+    <footer style="background: rgba(0, 0, 0, 0.9); border-top: 2px solid #ffd700; padding: 2rem 0; margin-top: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; padding: 0 2rem;">
+            <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                <button onclick="showTermsModal()" style="background: none; border: none; color: #ffd700; cursor: pointer; text-decoration: underline; font-size: 1rem;">
+                    <i class="fas fa-file-contract" style="margin-right: 0.5rem;"></i>Terms & Conditions
+                </button>
+                <button onclick="showPrivacyModal()" style="background: none; border: none; color: #ffd700; cursor: pointer; text-decoration: underline; font-size: 1rem;">
+                    <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>Privacy Policy
+                </button>
+                <a href="mailto:admin@yourserver.com" style="color: #ffd700; text-decoration: none; font-size: 1rem;">
+                    <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>Contact Support
+                </a>
+            </div>
+            <p style="color: #ccc; font-size: 0.9rem; margin: 0;">
+                © 2024 Rust Store. All rights reserved. | Powered by automated gaming services
+            </p>
+        </div>
+    </footer>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 20px; margin: 2% auto; padding: 2rem; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 1rem;">
+                <h2 style="color: #ffd700; font-size: 1.8rem; margin: 0;">
+                    <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>Privacy Policy
+                </h2>
+                <button id="closePrivacy" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="privacyContent" style="color: #fff; line-height: 1.6; margin-bottom: 2rem;">
+                <!-- Privacy content will be loaded here -->
+            </div>
+            
+            <div class="privacy-actions" style="display: flex; justify-content: flex-end;">
+                <button id="closePrivacyBtn" style="background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: 700;">
+                    <i class="fas fa-check" style="margin-right: 0.5rem;"></i>Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Automated Payment System Files -->
     <link rel="stylesheet" href="payment-styles.css">
     <!-- automated-payment-system.js removed - using new checkout system -->
