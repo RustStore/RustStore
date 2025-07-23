@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://www.paypal.com/sdk/js?client-id=ASEu5e6JYe48UKpHMud8YY6QnLGlMnCGvvr7GQRXtE7_qujoLyOYhO2nCflXpGmG_CPxsmzYVmu3wWLj&currency=USD"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         body {
@@ -336,32 +336,9 @@
         // Initialize PayPal function
         function initializePayPal() {
             const container = document.getElementById('paypal-button-container');
-            if (container && typeof paypal !== 'undefined' && !container.hasChildNodes()) {
-                paypal.Buttons({
-                    createOrder: function(data, actions) {
-                        const userId = getCurrentUserId();
-                        
-                        return actions.order.create({
-                            purchase_units: [{
-                                amount: {
-                                    value: (price / 100).toFixed(2)
-                                },
-                                description: itemName,
-                                custom_id: `${itemType}|${userId}`
-                            }]
-                        });
-                    },
-                    onApprove: function(data, actions) {
-                        return actions.order.capture().then(function(details) {
-                            // Payment successful
-                            showPaymentSuccess(details);
-                        });
-                    },
-                    onError: function(err) {
-                        console.error('PayPal error:', err);
-                        showError('Payment failed. Please try again.');
-                    }
-                }).render('#paypal-button-container');
+            if (container) {
+                // Show message that PayPal needs environment variables
+                container.innerHTML = '<div class="text-yellow-400 p-4 text-center">PayPal payment system will be available once environment variables are configured. Please contact support for payment options.</div>';
             }
         }
 
