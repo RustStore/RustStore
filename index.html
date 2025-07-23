@@ -11,6 +11,14 @@
         * { font-family: 'Rajdhani', sans-serif; }
         .orbitron { font-family: 'Orbitron', monospace; }
         
+        /* Rotating Images Animation */
+        @keyframes rotateImages {
+            0%, 25% { opacity: 1; }
+            25.1%, 50% { opacity: 0; }
+            50.1%, 75% { opacity: 0; }
+            75.1%, 100% { opacity: 0; }
+        }
+        
         /* Body and HTML setup */
         body {
             margin: 0;
@@ -723,91 +731,117 @@
             <!-- Raiding Kits Grid -->
             <div class="raiding-kits-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
                 
-                <!-- C4 Explosives Kit -->
+                <!-- Beginners Raiding Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00ff88; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); position: relative;">
+                        <img src="photos raiding kits/Satchel-Charge.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; animation: rotateImages 6s infinite;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 6s infinite 3s;">
+                    </div>
+                    <h3 style="color: #00ff88; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);">BEGINNERS RAIDING KIT</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">12 Satchels + 256 Explosive Rounds - Perfect starter kit for new raiders. Effective against wooden and stone structures.</p>
+                    <div style="font-size: 1.8rem; color: #00ff88; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);">$10.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'beginners-raiding-kit', name: 'BEGINNERS RAIDING KIT', price: 1099, description: '12 Satchels + 256 Explosive Rounds'})" style="flex: 1; background: rgba(0, 255, 136, 0.2); border: 1px solid #00ff88; color: #00ff88; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'beginners-raiding-kit', name: 'BEGINNERS RAIDING KIT', price: 1099, description: '12 Satchels + 256 Explosive Rounds'})" style="flex: 1; background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rookies Rocket Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff6b35; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff6b35; box-shadow: 0 0 15px rgba(255, 107, 53, 0.5); position: relative;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; animation: rotateImages 6s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 6s infinite 3s;">
+                    </div>
+                    <h3 style="color: #ff6b35; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);">ROOKIES ROCKET KIT</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Rocket Launcher + 9 Rockets - Entry-level rocket raiding kit. Perfect for learning rocket-based raiding tactics.</p>
+                    <div style="font-size: 1.8rem; color: #ff6b35; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);">$11.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'rookies-rocket-kit', name: 'ROOKIES ROCKET KIT', price: 1199, description: 'Rocket Launcher + 9 Rockets'})" style="flex: 1; background: rgba(255, 107, 53, 0.2); border: 1px solid #ff6b35; color: #ff6b35; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'rookies-rocket-kit', name: 'ROOKIES ROCKET KIT', price: 1199, description: 'Rocket Launcher + 9 Rockets'})" style="flex: 1; background: linear-gradient(45deg, #ff6b35, #ff8c42); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rocket Mania Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ffd700; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); position: relative;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; animation: rotateImages 8s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 8s infinite 2.67s;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 8s infinite 5.33s;">
+                    </div>
+                    <h3 style="color: #ffd700; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">ROCKET MANIA KIT</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">2 Rocket Launchers + 18 Rockets + 6 High Velocity Rockets - Advanced rocket raiding kit for serious destruction.</p>
+                    <div style="font-size: 1.8rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">$16.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'rocket-mania-kit', name: 'ROCKET MANIA KIT', price: 1699, description: '2 Rocket Launchers + 18 Rockets + 6 High Velocity Rockets'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'rocket-mania-kit', name: 'ROCKET MANIA KIT', price: 1699, description: '2 Rocket Launchers + 18 Rockets + 6 High Velocity Rockets'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Demolitioner Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff1493; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff1493; box-shadow: 0 0 15px rgba(255, 20, 147, 0.5);">
+                        <img src="photos raiding kits/C4.png" alt="Demolitioner Kit" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #ff1493; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);">DEMOLITIONER KIT</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">6 C4's - Pure explosive power for maximum destruction. The most effective explosive for breaking through any defense.</p>
+                    <div style="font-size: 1.8rem; color: #ff1493; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);">$7.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'demolitioner-kit', name: 'DEMOLITIONER KIT', price: 799, description: '6 C4\'s - Pure explosive power'})" style="flex: 1; background: rgba(255, 20, 147, 0.2); border: 1px solid #ff1493; color: #ff1493; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'demolitioner-kit', name: 'DEMOLITIONER KIT', price: 799, description: '6 C4\'s - Pure explosive power'})" style="flex: 1; background: linear-gradient(45deg, #ff1493, #ff69b4); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Base Breacher Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00bfff; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00bfff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.5); position: relative;">
+                        <img src="photos raiding kits/C4.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; animation: rotateImages 6s infinite;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 6s infinite 3s;">
+                    </div>
+                    <h3 style="color: #00bfff; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">BASE BREACHER</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">10 C4's + 384 Explosive Rounds - Ultimate base destruction kit. Breach any base with maximum efficiency.</p>
+                    <div style="font-size: 1.8rem; color: #00bfff; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">$13.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'base-breacher-kit', name: 'BASE BREACHER', price: 1399, description: '10 C4\'s + 384 Explosive Rounds'})" style="flex: 1; background: rgba(0, 191, 255, 0.2); border: 1px solid #00bfff; color: #00bfff; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'base-breacher-kit', name: 'BASE BREACHER', price: 1399, description: '10 C4\'s + 384 Explosive Rounds'})" style="flex: 1; background: linear-gradient(45deg, #00bfff, #87ceeb); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explosive Addicted Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff0000; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);">
-                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
-                        <img src="photos raiding kits/C4.png" alt="C4 Explosives" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); position: relative;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; animation: rotateImages 10s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 10s infinite 2s;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 10s infinite 4s;">
+                        <img src="photos raiding kits/C4.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: rotateImages 10s infinite 6s;">
                     </div>
-                    <h3 style="color: #ff0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">C4 Explosives</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">High-powered explosives for devastating raids. The most effective explosive for breaking through any defense.</p>
-                    <div style="font-size: 1.8rem; color: #ff0000; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">$12.99</div>
+                    <h3 style="color: #ff0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">EXPLOSIVE ADDICTED</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">3 Rocket Launchers + 27 Rockets + 9 High Velocity Rockets + 256 Explosive Rounds + 8 C4's - The ultimate explosive kit for maximum destruction.</p>
+                    <div style="font-size: 1.8rem; color: #ff0000; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">$24.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'explosive-addicted-kit', name: 'EXPLOSIVE ADDICTED', price: 2499, description: '3 Rocket Launchers + 27 Rockets + 9 High Velocity Rockets + 256 Explosive Rounds + 8 C4\'s'})" style="flex: 1; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: linear-gradient(45deg, #ff0000, #dc143c); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
-                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Rocket Launcher Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff4500; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);">
-                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff4500; box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);">
-                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Launcher" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <h3 style="color: #ff4500; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">Rocket Launcher</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Devastating rocket launcher with explosive rounds. Perfect for long-range destruction and base raiding.</p>
-                    <div style="font-size: 1.8rem; color: #ff4500; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">$19.99</div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: rgba(255, 69, 0, 0.2); border: 1px solid #ff4500; color: #ff4500; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
-                        </button>
-                        <button onclick="buyNow({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: linear-gradient(45deg, #ff4500, #ff6347); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
-                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Satchel Charges Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #8b0000; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);">
-                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #8b0000; box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);">
-                        <img src="photos raiding kits/Satchel-Charge.png" alt="Satchel Charges" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <h3 style="color: #8b0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);">Satchel Charges</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Explosive satchel charges for tactical raiding. Effective against wooden and stone structures.</p>
-                    <div style="font-size: 1.8rem; color: #8b0000; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);">$8.99</div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; color: #8b0000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
-                        </button>
-                        <button onclick="buyNow({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: linear-gradient(45deg, #8b0000, #b22222); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
-                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Rocket Ammo Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff6347; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 99, 71, 0.3);">
-                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff6347; box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);">
-                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rocket Ammo" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <h3 style="color: #ff6347; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 99, 71, 0.5);">Rocket Ammo</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">High-explosive rocket ammunition for rocket launchers. Maximum destructive power for raiding.</p>
-                    <div style="font-size: 1.8rem; color: #ff6347; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 99, 71, 0.5);">$14.99</div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'rocket-ammo-kit', name: 'Rocket Ammo', price: 1499, description: 'High-explosive rocket ammunition'})" style="flex: 1; background: rgba(255, 99, 71, 0.2); border: 1px solid #ff6347; color: #ff6347; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
-                        </button>
-                        <button onclick="buyNow({id: 'rocket-ammo-kit', name: 'Rocket Ammo', price: 1499, description: 'High-explosive rocket ammunition'})" style="flex: 1; background: linear-gradient(45deg, #ff6347, #ff7f50); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
-                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Explosive Rounds Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff8c00; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);">
-                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff8c00; box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);">
-                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Explosive Rounds" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <h3 style="color: #ff8c00; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);">Explosive Rounds</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Explosive ammunition for various weapons. Effective against structures and armored targets.</p>
-                    <div style="font-size: 1.8rem; color: #ff8c00; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);">$9.99</div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'explosive-rounds-kit', name: 'Explosive Rounds', price: 999, description: 'Explosive ammunition for weapons'})" style="flex: 1; background: rgba(255, 140, 0, 0.2); border: 1px solid #ff8c00; color: #ff8c00; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
-                        </button>
-                        <button onclick="buyNow({id: 'explosive-rounds-kit', name: 'Explosive Rounds', price: 999, description: 'Explosive ammunition for weapons'})" style="flex: 1; background: linear-gradient(45deg, #ff8c00, #ffa500); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'explosive-addicted-kit', name: 'EXPLOSIVE ADDICTED', price: 2499, description: '3 Rocket Launchers + 27 Rockets + 9 High Velocity Rockets + 256 Explosive Rounds + 8 C4\'s'})" style="flex: 1; background: linear-gradient(45deg, #ff0000, #dc143c); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
