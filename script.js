@@ -562,7 +562,7 @@ function setupNavigation() {
             e.preventDefault();
             const targetSection = button.getAttribute('data-section');
             console.log('Navigating to section:', targetSection);
-            showSection(targetSection);
+            toggleSection(targetSection);
         });
     });
 }
@@ -583,6 +583,30 @@ function hideSection(section) {
         section.style.transform = 'translateY(20px)';
         setTimeout(() => {
             section.style.display = 'none';
+        }, 200);
+    }
+}
+
+function toggleSection(sectionName) {
+    const targetSection = document.getElementById(sectionName + 'Section');
+    if (!targetSection) {
+        console.warn('Section not found:', sectionName + 'Section');
+        return;
+    }
+    
+    // Check if the section is currently visible
+    if (targetSection.style.display === 'block') {
+        // Section is open, so close it
+        hideSection(targetSection);
+    } else {
+        // Section is closed, so open it (and close others)
+        hideAllSections();
+        setTimeout(() => {
+            targetSection.style.display = 'block';
+            setTimeout(() => {
+                targetSection.style.opacity = '1';
+                targetSection.style.transform = 'translateY(0)';
+            }, 50);
         }, 200);
     }
 }
