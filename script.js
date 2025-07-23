@@ -505,23 +505,10 @@ async function checkout() {
         return;
     }
     
-    // In a real implementation, you would integrate with a payment processor
-    // For now, we'll simulate a successful payment
-    try {
-        const response = await apiRequest('/store/checkout', {
-            method: 'POST',
-            body: JSON.stringify({
-                payment_method: 'creditcard',
-                payment_token: 'simulated_payment_token'
-            })
-        });
-        
-        showSuccess('Purchase successful! Items have been added to your inventory.');
-        hideCart();
-        await loadCart();
-    } catch (error) {
-        showError('Checkout failed');
-    }
+    // Redirect to the new checkout page with cart items
+    const cartItem = cartItems[0]; // For now, handle first item
+    const checkoutUrl = `checkout.html?item=${cartItem.id}&price=${cartItem.price}&name=${encodeURIComponent(cartItem.name)}`;
+    window.location.href = checkoutUrl;
 }
 
 // Auth Functions
@@ -2098,97 +2085,11 @@ async function purchaseRaidingKit(kitType, price, button) {
 
 // Show payment options modal
 function showPaymentModal(itemType, price, button) {
-    const priceInDollars = (price / 100).toFixed(2);
-    const itemName = itemType.replace(/_/g, ' ').toUpperCase();
+    const itemName = button.getAttribute('data-item-name') || itemType.replace(/_/g, ' ').toUpperCase();
     
-    // Store current purchase info
-    currentPurchase = {
-        itemType: itemType,
-        price: priceInDollars,
-        itemName: itemName,
-        timestamp: new Date().toISOString()
-    };
-    
-    const modal = document.createElement('div');
-    modal.id = 'paymentModal';
-    modal.style.cssText = `
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        background: rgba(0, 0, 0, 0.8); 
-        z-index: 3000; 
-        backdrop-filter: blur(5px); 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-    `;
-
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: rgba(0, 0, 0, 0.95); 
-        border: 2px solid #ffd700; 
-        border-radius: 20px; 
-        padding: 2rem; 
-        max-width: 500px; 
-        width: 90%; 
-        text-align: center;
-    `;
-
-    modalContent.innerHTML = `
-        <div style="margin-bottom: 2rem;">
-            <h3 style="color: #ffd700; font-size: 1.8rem; margin-bottom: 1rem;">
-                <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>Purchase ${itemName}
-            </h3>
-            <p style="color: #ffd700; font-size: 1.5rem; font-weight: 700;">$${priceInDollars}</p>
-            <p style="color: #fff; font-size: 1rem; margin-top: 1rem;">
-                After payment, use the predetermined message in-game to claim your kit!
-            </p>
-        </div>
-        
-        <div id="paypal-button-container" style="margin-bottom: 2rem;"></div>
-        
-        <div style="margin-bottom: 2rem;">
-            <p style="color: #fff; font-size: 0.9rem; margin-bottom: 0.5rem;">Or pay with Cash App:</p>
-            <button onclick="payWithCashApp('${itemType}', ${price}, '${itemName}')" style="
-                background: linear-gradient(45deg, #00d632, #00b327); 
-                border: none; 
-                color: #fff; 
-                padding: 1rem 2rem; 
-                border-radius: 10px; 
-                font-size: 1.1rem; 
-                font-weight: 700; 
-                cursor: pointer; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                gap: 0.5rem;
-                margin: 0 auto;
-            ">
-                <i class="fas fa-dollar-sign" style="font-size: 1.2rem;"></i>
-                Pay with Cash App
-            </button>
-        </div>
-        
-        <button onclick="closePaymentModal()" style="
-            background: none; 
-            border: 1px solid #ffd700; 
-            color: #ffd700; 
-            padding: 0.8rem 1.5rem; 
-            border-radius: 10px; 
-            font-size: 1rem; 
-            cursor: pointer;
-        ">
-            Cancel
-        </button>
-    `;
-
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    // Initialize PayPal Checkout
-    initializePayPalCheckout();
+    // Redirect to the new checkout page
+    const checkoutUrl = `checkout.html?item=${itemType}&price=${price}&name=${encodeURIComponent(itemName)}`;
+    window.location.href = checkoutUrl;
 }
 
 // Close payment modal
