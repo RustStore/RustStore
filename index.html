@@ -579,54 +579,126 @@
             <div class="resource-kits-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
                 
                 <!-- Wood Kit -->
-                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos resource kits/Wood.png" alt="Wood Bundle" style="width: 80px; height: 80px; object-fit: contain;">
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00ff88; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);">
+                        <img src="photos resource kits/Wood.png" alt="Wood Bundle" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Wood Bundle</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Essential wood for building your base</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$3.99</div>
+                    <h3 style="color: #00ff88; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);">Wood Bundle</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Essential wood for building your base. Perfect for constructing walls, floors, and basic structures.</p>
+                    <div style="font-size: 1.8rem; color: #00ff88; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);">$3.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'wood-kit', name: 'Wood Bundle', price: 399, description: 'Essential wood for building'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'wood-kit', name: 'Wood Bundle', price: 399, description: 'Essential wood for building your base'})" style="flex: 1; background: rgba(0, 255, 136, 0.2); border: 1px solid #00ff88; color: #00ff88; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'wood-kit', name: 'Wood Bundle', price: 399, description: 'Essential wood for building'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'wood-kit', name: 'Wood Bundle', price: 399, description: 'Essential wood for building your base'})" style="flex: 1; background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
                 </div>
 
                 <!-- Stone Kit -->
-                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos resource kits/Stone.png" alt="Stone Bundle" style="width: 80px; height: 80px; object-fit: contain;">
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff6b35; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff6b35; box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);">
+                        <img src="photos resource kits/Stone.png" alt="Stone Bundle" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Stone Bundle</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Strong stone for foundations</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$5.99</div>
+                    <h3 style="color: #ff6b35; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);">Stone Bundle</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Strong stone for foundations and advanced building. Provides excellent protection and durability.</p>
+                    <div style="font-size: 1.8rem; color: #ff6b35; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);">$5.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'stone-kit', name: 'Stone Bundle', price: 599, description: 'Strong stone for foundations'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'stone-kit', name: 'Stone Bundle', price: 599, description: 'Strong stone for foundations'})" style="flex: 1; background: rgba(255, 107, 53, 0.2); border: 1px solid #ff6b35; color: #ff6b35; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'stone-kit', name: 'Stone Bundle', price: 599, description: 'Strong stone for foundations'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'stone-kit', name: 'Stone Bundle', price: 599, description: 'Strong stone for foundations'})" style="flex: 1; background: linear-gradient(45deg, #ff6b35, #ff8c42); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
                 </div>
 
-                <!-- Metal Kit -->
-                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos resource kits/Metal Fragments.png" alt="Metal Fragments" style="width: 80px; height: 80px; object-fit: contain;">
+                <!-- Metal Fragments Kit -->
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ffd700; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);">
+                        <img src="photos resource kits/Metal Fragments.png" alt="Metal Fragments" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Metal Fragments</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Advanced building materials</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$7.99</div>
+                    <h3 style="color: #ffd700; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">Metal Fragments</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Advanced building materials for high-tier structures. Essential for crafting tools and weapons.</p>
+                    <div style="font-size: 1.8rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">$7.99</div>
                     <div style="display: flex; gap: 0.5rem;">
                         <button onclick="addToCart({id: 'metal-kit', name: 'Metal Fragments', price: 799, description: 'Advanced building materials'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
                         <button onclick="buyNow({id: 'metal-kit', name: 'Metal Fragments', price: 799, description: 'Advanced building materials'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- HQM Kit -->
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff1493; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff1493; box-shadow: 0 0 15px rgba(255, 20, 147, 0.5);">
+                        <img src="photos resource kits/HQM.png" alt="High Quality Metal" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #ff1493; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);">High Quality Metal</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Premium metal for the strongest structures and most powerful weapons. Ultimate building material.</p>
+                    <div style="font-size: 1.8rem; color: #ff1493; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);">$12.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'hqm-kit', name: 'High Quality Metal', price: 1299, description: 'Premium metal for strongest structures'})" style="flex: 1; background: rgba(255, 20, 147, 0.2); border: 1px solid #ff1493; color: #ff1493; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'hqm-kit', name: 'High Quality Metal', price: 1299, description: 'Premium metal for strongest structures'})" style="flex: 1; background: linear-gradient(45deg, #ff1493, #ff69b4); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrap Kit -->
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00bfff; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00bfff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);">
+                        <img src="photos resource kits/Scrap.png" alt="Scrap" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #00bfff; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">Scrap</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Versatile resource for crafting and trading. Essential currency for workbenches and advanced items.</p>
+                    <div style="font-size: 1.8rem; color: #00bfff; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">$4.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'scrap-kit', name: 'Scrap', price: 499, description: 'Versatile resource for crafting'})" style="flex: 1; background: rgba(0, 191, 255, 0.2); border: 1px solid #00bfff; color: #00bfff; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'scrap-kit', name: 'Scrap', price: 499, description: 'Versatile resource for crafting'})" style="flex: 1; background: linear-gradient(45deg, #00bfff, #87ceeb); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cloth Kit -->
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #9370db; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #9370db; box-shadow: 0 0 15px rgba(147, 112, 219, 0.5);">
+                        <img src="photos resource kits/Cloth.png" alt="Cloth" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #9370db; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(147, 112, 219, 0.5);">Cloth</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Essential material for clothing, sleeping bags, and medical supplies. Basic survival resource.</p>
+                    <div style="font-size: 1.8rem; color: #9370db; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(147, 112, 219, 0.5);">$2.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'cloth-kit', name: 'Cloth', price: 299, description: 'Essential material for clothing'})" style="flex: 1; background: rgba(147, 112, 219, 0.2); border: 1px solid #9370db; color: #9370db; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'cloth-kit', name: 'Cloth', price: 299, description: 'Essential material for clothing'})" style="flex: 1; background: linear-gradient(45deg, #9370db, #ba55d3); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Low Grade Fuel Kit -->
+                <div class="resource-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff4500; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff4500; box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);">
+                        <img src="photos resource kits/Low Grade Fuel.png" alt="Low Grade Fuel" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #ff4500; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">Low Grade Fuel</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Fuel for furnaces, lanterns, and generators. Essential for smelting and lighting your base.</p>
+                    <div style="font-size: 1.8rem; color: #ff4500; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">$3.49</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'fuel-kit', name: 'Low Grade Fuel', price: 349, description: 'Fuel for furnaces and generators'})" style="flex: 1; background: rgba(255, 69, 0, 0.2); border: 1px solid #ff4500; color: #ff4500; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'fuel-kit', name: 'Low Grade Fuel', price: 349, description: 'Fuel for furnaces and generators'})" style="flex: 1; background: linear-gradient(45deg, #ff4500, #ff6347); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
@@ -651,55 +723,91 @@
             <!-- Raiding Kits Grid -->
             <div class="raiding-kits-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
                 
-                <!-- C4 Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos raiding kits/C4.png" alt="C4 Explosives" style="width: 80px; height: 80px; object-fit: contain;">
+                <!-- C4 Explosives Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff0000; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);">
+                        <img src="photos raiding kits/C4.png" alt="C4 Explosives" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">C4 Explosives</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">High-powered explosives for raiding</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$12.99</div>
+                    <h3 style="color: #ff0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">C4 Explosives</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">High-powered explosives for devastating raids. The most effective explosive for breaking through any defense.</p>
+                    <div style="font-size: 1.8rem; color: #ff0000; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">$12.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'c4-kit', name: 'C4 Explosives', price: 1299, description: 'High-powered explosives for raiding'})" style="flex: 1; background: linear-gradient(45deg, #ff0000, #dc143c); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
                 </div>
 
-                <!-- Rocket Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Launcher" style="width: 80px; height: 80px; object-fit: contain;">
+                <!-- Rocket Launcher Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff4500; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff4500; box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Launcher" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Rocket Launcher</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Devastating rocket launcher kit</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$19.99</div>
+                    <h3 style="color: #ff4500; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">Rocket Launcher</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Devastating rocket launcher with explosive rounds. Perfect for long-range destruction and base raiding.</p>
+                    <div style="font-size: 1.8rem; color: #ff4500; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);">$19.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: rgba(255, 69, 0, 0.2); border: 1px solid #ff4500; color: #ff4500; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'rocket-kit', name: 'Rocket Launcher', price: 1999, description: 'Devastating rocket launcher kit'})" style="flex: 1; background: linear-gradient(45deg, #ff4500, #ff6347); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
                 </div>
 
-                <!-- Satchel Kit -->
-                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;">
-                    <div style="width: 100px; height: 100px; margin: 0 auto 1rem; background: linear-gradient(45deg, #ffd700, #ffed4e); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                        <img src="photos raiding kits/Satchel-Charge.png" alt="Satchel Charges" style="width: 80px; height: 80px; object-fit: contain;">
+                <!-- Satchel Charges Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #8b0000; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #8b0000; box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);">
+                        <img src="photos raiding kits/Satchel-Charge.png" alt="Satchel Charges" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 0.5rem;">Satchel Charges</h3>
-                    <p style="color: #ccc; margin-bottom: 1rem;">Explosive satchel charges</p>
-                    <div style="font-size: 1.5rem; color: #ffd700; font-weight: bold; margin-bottom: 1rem;">$8.99</div>
+                    <h3 style="color: #8b0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);">Satchel Charges</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Explosive satchel charges for tactical raiding. Effective against wooden and stone structures.</p>
+                    <div style="font-size: 1.8rem; color: #8b0000; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);">$8.99</div>
                     <div style="display: flex; gap: 0.5rem;">
-                        <button onclick="addToCart({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <button onclick="addToCart({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: rgba(139, 0, 0, 0.2); border: 1px solid #8b0000; color: #8b0000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
                             <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
                         </button>
-                        <button onclick="buyNow({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                        <button onclick="buyNow({id: 'satchel-kit', name: 'Satchel Charges', price: 899, description: 'Explosive satchel charges'})" style="flex: 1; background: linear-gradient(45deg, #8b0000, #b22222); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rocket Ammo Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff6347; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 99, 71, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff6347; box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rocket Ammo" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #ff6347; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 99, 71, 0.5);">Rocket Ammo</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">High-explosive rocket ammunition for rocket launchers. Maximum destructive power for raiding.</p>
+                    <div style="font-size: 1.8rem; color: #ff6347; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 99, 71, 0.5);">$14.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'rocket-ammo-kit', name: 'Rocket Ammo', price: 1499, description: 'High-explosive rocket ammunition'})" style="flex: 1; background: rgba(255, 99, 71, 0.2); border: 1px solid #ff6347; color: #ff6347; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'rocket-ammo-kit', name: 'Rocket Ammo', price: 1499, description: 'High-explosive rocket ammunition'})" style="flex: 1; background: linear-gradient(45deg, #ff6347, #ff7f50); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
+                            <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Explosive Rounds Kit -->
+                <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff8c00; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);">
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff8c00; box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Explosive Rounds" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="color: #ff8c00; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);">Explosive Rounds</h3>
+                    <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Explosive ammunition for various weapons. Effective against structures and armored targets.</p>
+                    <div style="font-size: 1.8rem; color: #ff8c00; font-weight: bold; margin-bottom: 1rem; text-shadow: 0 0 10px rgba(255, 140, 0, 0.5);">$9.99</div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="addToCart({id: 'explosive-rounds-kit', name: 'Explosive Rounds', price: 999, description: 'Explosive ammunition for weapons'})" style="flex: 1; background: rgba(255, 140, 0, 0.2); border: 1px solid #ff8c00; color: #ff8c00; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
+                        </button>
+                        <button onclick="buyNow({id: 'explosive-rounds-kit', name: 'Explosive Rounds', price: 999, description: 'Explosive ammunition for weapons'})" style="flex: 1; background: linear-gradient(45deg, #ff8c00, #ffa500); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700;">
                             <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
                         </button>
                     </div>
