@@ -517,8 +517,47 @@
         }
 
         function showPaymentSuccess(details) {
-            alert('Payment successful! Your kit will be delivered shortly.');
-            window.location.href = 'index.html';
+            // Get customer information
+            const customerEmail = document.getElementById('customerEmail').value;
+            const discordUsername = document.getElementById('discordUsername').value;
+            const gameUsername = document.getElementById('gameUsername').value;
+            
+            // Determine payment method and transaction ID
+            const paymentMethod = details.payment_method_types ? 'Credit Card (Stripe)' : 'PayPal';
+            const transactionId = details.id || details.paymentID || 'N/A';
+            
+            // Send purchase ticket email
+            fetch('/.netlify/functions/send-purchase-ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    customerEmail: customerEmail,
+                    discordUsername: discordUsername,
+                    gameUsername: gameUsername,
+                    itemName: itemName,
+                    itemPrice: price,
+                    paymentMethod: paymentMethod,
+                    transactionId: transactionId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Payment successful! Your kit will be delivered shortly. A confirmation email has been sent to your inbox.');
+                } else {
+                    console.error('Failed to send email:', data.error);
+                    alert('Payment successful! Your kit will be delivered shortly. (Email notification failed)');
+                }
+            })
+            .catch(error => {
+                console.error('Error sending email:', error);
+                alert('Payment successful! Your kit will be delivered shortly. (Email notification failed)');
+            })
+            .finally(() => {
+                window.location.href = 'index.html';
+            });
         }
 
         function showError(message) {
