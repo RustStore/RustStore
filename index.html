@@ -565,11 +565,18 @@
     <!-- Bottom Bar - Store Sections -->
     <nav class="bottom-bar">
         <div class="bottom-bar-content">
-            <a href="javascript:void(0)" class="store-section">VIP</a>
-            <a href="javascript:void(0)" class="store-section">Resource Kits</a>
-            <a href="javascript:void(0)" class="store-section">Raiding Kits</a>
-            <a href="javascript:void(0)" class="store-section">Vehicle Kits</a>
-            <a href="javascript:void(0)" class="store-section">Gun Kits</a>
+            <a href="javascript:void(0)" class="store-section" data-section="vipSection">
+                <i class="fas fa-crown" style="margin-right: 0.5rem;"></i>VIP
+            </a>
+            <a href="javascript:void(0)" class="store-section" data-section="resourceKitsSection">
+                <i class="fas fa-boxes" style="margin-right: 0.5rem;"></i>Resource Kits
+            </a>
+            <a href="javascript:void(0)" class="store-section" data-section="raidingKitsSection">
+                <i class="fas fa-rocket" style="margin-right: 0.5rem;"></i>Raiding Kits
+            </a>
+            <a href="javascript:void(0)" class="store-section" data-section="storeSection">
+                <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Store
+            </a>
             <button onclick="showTermsModal()" class="store-section" style="background: none; border: none; cursor: pointer;">
                 <i class="fas fa-file-contract" style="margin-right: 0.5rem;"></i>TERMS
             </button>

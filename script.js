@@ -99,9 +99,10 @@ function disableUserInteractions() {
     // Disable navigation buttons except Terms
     const navButtons = document.querySelectorAll('.bottom-bar .store-section');
     navButtons.forEach(button => {
-        if (!button.id || button.id !== 'termsBtn') {
+        if (!button.onclick || !button.onclick.toString().includes('showTermsModal')) {
             button.style.pointerEvents = 'none';
             button.style.opacity = '0.5';
+            button.style.cursor = 'not-allowed';
         }
     });
     
@@ -110,8 +111,11 @@ function disableUserInteractions() {
     interactiveElements.forEach(element => {
         if (!element.closest('.modal') && !element.id?.includes('terms')) { // Don't disable modal elements or terms buttons
             element.style.pointerEvents = 'none';
+            element.style.cursor = 'not-allowed';
         }
     });
+    
+    console.log('User interactions disabled');
 }
 
 function loadTermsContent() {
@@ -241,13 +245,17 @@ function enableUserInteractions() {
     navButtons.forEach(button => {
         button.style.pointerEvents = 'auto';
         button.style.opacity = '1';
+        button.style.cursor = 'pointer';
     });
     
     // Enable other interactive elements
     const interactiveElements = document.querySelectorAll('button, input, select, textarea');
     interactiveElements.forEach(element => {
         element.style.pointerEvents = 'auto';
+        element.style.cursor = 'auto';
     });
+    
+    console.log('User interactions enabled');
 }
 
 function declineTerms() {
@@ -522,10 +530,25 @@ function setupNavigation() {
     const vipSection = document.getElementById('vipSection');
     const resourceKitsSection = document.getElementById('resourceKitsSection');
     const raidingKitsSection = document.getElementById('raidingKitsSection');
-    const navButtons = document.querySelectorAll('.bottom-bar .store-section');
+    const navButtons = document.querySelectorAll('.bottom-bar .store-section[data-section]');
+    
+    // Check if sections exist
+    if (!storeSection) {
+        console.warn('Store section not found');
+    }
+    if (!vipSection) {
+        console.warn('VIP section not found');
+    }
+    if (!resourceKitsSection) {
+        console.warn('Resource Kits section not found');
+    }
+    if (!raidingKitsSection) {
+        console.warn('Raiding Kits section not found');
+    }
     
     // Hide all sections by default
-    [storeSection, vipSection, resourceKitsSection, raidingKitsSection].forEach(section => {
+    const sections = [storeSection, vipSection, resourceKitsSection, raidingKitsSection];
+    sections.forEach(section => {
         if (section) {
             section.style.display = 'none';
             section.style.opacity = '0';
@@ -538,6 +561,7 @@ function setupNavigation() {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             const targetSection = button.getAttribute('data-section');
+            console.log('Navigating to section:', targetSection);
             showSection(targetSection);
         });
     });
