@@ -318,111 +318,17 @@
         // Initialize Stripe when Stripe option is selected
         function initializeStripe() {
             if (!stripe) {
-                // Check if we have the Stripe key
-                const publishableKey = 'pk_live_51RnLVOGrdgrf2IRXwqA5CjEDzEOVotV2tLXbmcKA8V853XhzJD8wBkjkIjj8aiFdwQ3zzwZIWy4sHzijNH1w6gqG003dVjysSv';
+                // For now, show a message that Stripe needs environment variables
+                const cardElement = document.getElementById('card-element');
+                if (cardElement) {
+                    cardElement.innerHTML = '<div class="text-yellow-400 p-4 text-center">Stripe payment system will be available once environment variables are configured. Please use PayPal for now.</div>';
+                }
                 
-                if (publishableKey && publishableKey !== 'YOUR_STRIPE_PUBLISHABLE_KEY') {
-                    stripe = Stripe(publishableKey);
-                    const elements = stripe.elements();
-
-                    // Create card element
-                    const card = elements.create('card', {
-                        style: {
-                            base: {
-                                fontSize: '16px',
-                                color: '#ffffff',
-                                '::placeholder': {
-                                    color: '#9ca3af'
-                                }
-                            }
-                        }
-                    });
-
-                    // Mount card element
-                    card.mount('#card-element');
-
-                    // Handle card errors
-                    card.addEventListener('change', function(event) {
-                        const displayError = document.getElementById('card-errors');
-                        if (event.error) {
-                            displayError.textContent = event.error.message;
-                        } else {
-                            displayError.textContent = '';
-                        }
-                    });
-
-                    // Handle Stripe form submission
-                    const form = document.getElementById('payment-form');
-                    form.addEventListener('submit', function(event) {
-                        event.preventDefault();
-                        
-                        if (!document.getElementById('terms').checked) {
-                            alert('Please agree to the terms and conditions.');
-                            return;
-                        }
-
-                        const customerEmail = document.getElementById('customerEmail').value;
-                        const discordUsername = document.getElementById('discordUsername').value;
-                        const gameUsername = document.getElementById('gameUsername').value;
-
-                        if (!customerEmail || !discordUsername || !gameUsername) {
-                            alert('Please fill in all customer information fields.');
-                            return;
-                        }
-
-                        setLoading(true);
-
-                        // Create payment intent on your server
-                        fetch('/.netlify/functions/create-payment-intent', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                amount: price,
-                                itemType: itemType,
-                                itemName: itemName,
-                                customerEmail: customerEmail,
-                                discordUsername: discordUsername,
-                                gameUsername: gameUsername
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                throw new Error(data.error);
-                            }
-                            return stripe.confirmCardPayment(data.clientSecret, {
-                                payment_method: {
-                                    card: card,
-                                    billing_details: {
-                                        email: customerEmail,
-                                        name: gameUsername
-                                    }
-                                }
-                            });
-                        })
-                        .then(result => {
-                            if (result.error) {
-                                throw new Error(result.error.message);
-                            } else {
-                                showPaymentSuccess(result.paymentIntent);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            showError(error.message);
-                        })
-                        .finally(() => {
-                            setLoading(false);
-                        });
-                    });
-                } else {
-                    // Show error if Stripe key is not configured
-                    const cardElement = document.getElementById('card-element');
-                    if (cardElement) {
-                        cardElement.innerHTML = '<div class="text-red-400 p-4 text-center">Stripe payment system needs to be configured. Please contact support.</div>';
-                    }
+                // Disable the submit button
+                const submitButton = document.getElementById('submit-button');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span>Stripe Not Configured</span>';
                 }
             }
         }
