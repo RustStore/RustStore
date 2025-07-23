@@ -315,30 +315,173 @@
             }
         }
 
-        // Initialize Stripe when Stripe option is selected
-        function initializeStripe() {
-            if (!stripe) {
-                // For now, show a message that Stripe needs environment variables
-                const cardElement = document.getElementById('card-element');
-                if (cardElement) {
-                    cardElement.innerHTML = '<div class="text-yellow-400 p-4 text-center">Stripe payment system will be available once environment variables are configured. Please use PayPal for now.</div>';
-                }
-                
-                // Disable the submit button
-                const submitButton = document.getElementById('submit-button');
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.innerHTML = '<span>Stripe Not Configured</span>';
-                }
-            }
-        }
-
         // Initialize PayPal function
         function initializePayPal() {
             const container = document.getElementById('paypal-button-container');
             if (container) {
-                // Show message that PayPal needs environment variables
-                container.innerHTML = '<div class="text-yellow-400 p-4 text-center">PayPal payment system will be available once environment variables are configured. Please contact support for payment options.</div>';
+                // Get PayPal client ID from server
+                fetch('/.netlify/functions/get-payment-config')
+                    .then(response => response.json())
+                    .then(config => {
+                        if (config.paypalClientId) {
+                            // Load PayPal SDK with client ID from server
+                            const script = document.createElement('script');
+                            script.src = `https://www.paypal.com/sdk/js?client-id=${config.paypalClientId}&currency=USD`;
+                            script.onload = function() {
+                                if (typeof paypal !== 'undefined') {
+                                    paypal.Buttons({
+                                        createOrder: function(data, actions) {
+                                            return actions.order.create({
+                                                purchase_units: [{
+                                                    amount: {
+                                                        value: (price / 100).toFixed(2)
+                                                    },
+                                                    description: itemName
+                                                }]
+                                            });
+                                        },
+                                        onApprove: function(data, actions) {
+                                            return actions.order.capture().then(function(details) {
+                                                // Payment successful
+                                                showPaymentSuccess(details);
+                                            });
+                                        },
+                                        onError: function(err) {
+                                            console.error('PayPal error:', err);
+                                            showError('Payment failed. Please try again.');
+                                        }
+                                    }).render('#paypal-button-container');
+                                }
+                            };
+                            document.head.appendChild(script);
+                        } else {
+                            container.innerHTML = '<div class="text-yellow-400 p-4 text-center">PayPal configuration not found. Please check environment variables.</div>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading PayPal config:', error);
+                        container.innerHTML = '<div class="text-red-400 p-4 text-center">Error loading PayPal. Please try again.</div>';
+                    });
+            }
+        }
+
+        // Initialize Stripe when Stripe option is selected
+        function initializeStripe() {
+            if (!stripe) {
+                // Get Stripe publishable key from server
+                fetch('/.netlify/functions/get-payment-config')
+                    .then(response => response.json())
+                    .then(config => {
+                        if (config.stripePublishableKey) {
+                            stripe = Stripe(config.stripePublishableKey);
+                            const elements = stripe.elements();
+
+                            // Create card element
+                            const card = elements.create('card', {
+                                style: {
+                                    base: {
+                                        fontSize: '16px',
+                                        color: '#ffffff',
+                                        '::placeholder': {
+                                            color: '#9ca3af'
+                                        }
+                                    }
+                                }
+                            });
+
+                            // Mount card element
+                            card.mount('#card-element');
+
+                            // Handle card errors
+                            card.addEventListener('change', function(event) {
+                                const displayError = document.getElementById('card-errors');
+                                if (event.error) {
+                                    displayError.textContent = event.error.message;
+                                } else {
+                                    displayError.textContent = '';
+                                }
+                            });
+
+                            // Handle Stripe form submission
+                            const form = document.getElementById('payment-form');
+                            form.addEventListener('submit', function(event) {
+                                event.preventDefault();
+                                
+                                if (!document.getElementById('terms').checked) {
+                                    alert('Please agree to the terms and conditions.');
+                                    return;
+                                }
+
+                                const customerEmail = document.getElementById('customerEmail').value;
+                                const discordUsername = document.getElementById('discordUsername').value;
+                                const gameUsername = document.getElementById('gameUsername').value;
+
+                                if (!customerEmail || !discordUsername || !gameUsername) {
+                                    alert('Please fill in all customer information fields.');
+                                    return;
+                                }
+
+                                setLoading(true);
+
+                                // Create payment intent on your server
+                                fetch('/.netlify/functions/create-payment-intent', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        amount: price,
+                                        itemType: itemType,
+                                        itemName: itemName,
+                                        customerEmail: customerEmail,
+                                        discordUsername: discordUsername,
+                                        gameUsername: gameUsername
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        throw new Error(data.error);
+                                    }
+                                    return stripe.confirmCardPayment(data.clientSecret, {
+                                        payment_method: {
+                                            card: card,
+                                            billing_details: {
+                                                email: customerEmail,
+                                                name: gameUsername
+                                            }
+                                        }
+                                    });
+                                })
+                                .then(result => {
+                                    if (result.error) {
+                                        throw new Error(result.error.message);
+                                    } else {
+                                        showPaymentSuccess(result.paymentIntent);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    showError(error.message);
+                                })
+                                .finally(() => {
+                                    setLoading(false);
+                                });
+                            });
+                        } else {
+                            const cardElement = document.getElementById('card-element');
+                            if (cardElement) {
+                                cardElement.innerHTML = '<div class="text-yellow-400 p-4 text-center">Stripe configuration not found. Please check environment variables.</div>';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading Stripe config:', error);
+                        const cardElement = document.getElementById('card-element');
+                        if (cardElement) {
+                            cardElement.innerHTML = '<div class="text-red-400 p-4 text-center">Error loading Stripe. Please try again.</div>';
+                        }
+                    });
             }
         }
 
