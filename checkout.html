@@ -277,23 +277,45 @@
             const stripeArrow = document.getElementById('stripe-arrow');
 
             if (method === 'paypal') {
-                paypalContent.classList.toggle('payment-collapsed');
-                paypalContent.classList.toggle('payment-expanded');
-                paypalArrow.style.transform = paypalContent.classList.contains('payment-expanded') ? 'rotate(180deg)' : '';
+                // Toggle PayPal
+                const isPaypalExpanded = paypalContent.classList.contains('payment-expanded');
                 
-                // Collapse Stripe
-                stripeContent.classList.add('payment-collapsed');
-                stripeContent.classList.remove('payment-expanded');
-                stripeArrow.style.transform = '';
+                if (isPaypalExpanded) {
+                    // Collapse PayPal
+                    paypalContent.classList.remove('payment-expanded');
+                    paypalContent.classList.add('payment-collapsed');
+                    paypalArrow.style.transform = '';
+                } else {
+                    // Expand PayPal, collapse Stripe
+                    paypalContent.classList.remove('payment-collapsed');
+                    paypalContent.classList.add('payment-expanded');
+                    paypalArrow.style.transform = 'rotate(180deg)';
+                    
+                    // Collapse Stripe
+                    stripeContent.classList.remove('payment-expanded');
+                    stripeContent.classList.add('payment-collapsed');
+                    stripeArrow.style.transform = '';
+                }
             } else if (method === 'stripe') {
-                stripeContent.classList.toggle('payment-collapsed');
-                stripeContent.classList.toggle('payment-expanded');
-                stripeArrow.style.transform = stripeContent.classList.contains('payment-expanded') ? 'rotate(180deg)' : '';
+                // Toggle Stripe
+                const isStripeExpanded = stripeContent.classList.contains('payment-expanded');
                 
-                // Collapse PayPal
-                paypalContent.classList.add('payment-collapsed');
-                paypalContent.classList.remove('payment-expanded');
-                paypalArrow.style.transform = '';
+                if (isStripeExpanded) {
+                    // Collapse Stripe
+                    stripeContent.classList.remove('payment-expanded');
+                    stripeContent.classList.add('payment-collapsed');
+                    stripeArrow.style.transform = '';
+                } else {
+                    // Expand Stripe, collapse PayPal
+                    stripeContent.classList.remove('payment-collapsed');
+                    stripeContent.classList.add('payment-expanded');
+                    stripeArrow.style.transform = 'rotate(180deg)';
+                    
+                    // Collapse PayPal
+                    paypalContent.classList.remove('payment-expanded');
+                    paypalContent.classList.add('payment-collapsed');
+                    paypalArrow.style.transform = '';
+                }
             }
         }
 
