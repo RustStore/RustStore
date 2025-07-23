@@ -254,6 +254,29 @@
                 max-width: 100% !important;
             }
         }
+        
+        /* Message animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body class="text-white">
@@ -314,6 +337,9 @@
                 </div>
                 <div id="userSection" style="display: none;">
                     <span id="username" style="color: #ffd700; font-weight: 600; margin-right: 1rem;"></span>
+                    <button id="userInfoBtn" class="store-section" style="margin-right: 1rem;">
+                        <i class="fas fa-user-edit" style="margin-right: 0.5rem;"></i>User Info
+                    </button>
                     <button id="cartBtn" class="store-section" style="margin-right: 1rem;">
                         <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Cart <span id="cartCount" style="background: #ffd700; color: #000; padding: 0.2rem 0.5rem; border-radius: 50%; font-size: 0.8rem;">0</span>
                     </button>
@@ -544,61 +570,155 @@
         </div>
     </nav>
 
-    <!-- Cart Modal -->
-    <div id="cartModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; backdrop-filter: blur(5px);">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 15px; padding: 2rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 style="color: #ffd700; font-size: 1.5rem; margin: 0;">
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 20px; margin: 5% auto; padding: 2rem; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 1rem;">
+                <h2 style="color: #ffd700; font-size: 1.8rem; margin: 0;">
                     <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Shopping Cart
-                </h3>
-                <button id="closeCart" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer;">
+                </h2>
+                <button id="closeCart" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div id="cartItems" style="margin-bottom: 1.5rem;">
+            
+            <div id="cartItems" style="margin-bottom: 2rem;">
                 <!-- Cart items will be loaded here -->
             </div>
-            <div style="border-top: 1px solid rgba(255, 215, 0, 0.3); padding-top: 1rem; margin-bottom: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <span style="color: #fff; font-size: 1.2rem;">Total:</span>
-                    <span id="cartTotal" style="color: #ffd700; font-size: 1.5rem; font-weight: 700;">$0.00</span>
+            
+            <div class="cart-total" style="border-top: 1px solid rgba(255, 215, 0, 0.3); padding-top: 1rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.2rem;">
+                    <span style="color: #fff;">Total:</span>
+                    <span id="cartTotal" style="color: #ffd700; font-weight: bold; font-size: 1.5rem;">$0.00</span>
                 </div>
-                <button id="checkoutBtn" style="width: 100%; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
-                    <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>Checkout
+            </div>
+            
+            <div class="cart-actions" style="display: flex; gap: 1rem;">
+                <button id="clearCart" style="flex: 1; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-trash" style="margin-right: 0.5rem;"></i>Clear Cart
+                </button>
+                <button id="checkoutBtn" style="flex: 2; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: 700;">
+                    <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>Proceed to Checkout
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Auth Modal -->
-    <div id="authModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 2000; backdrop-filter: blur(5px);">
-        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 15px; padding: 2rem; max-width: 400px; width: 90%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 id="authTitle" style="color: #ffd700; font-size: 1.5rem; margin: 0;">Login</h3>
-                <button id="closeAuth" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer;">
+    <!-- User Authentication Modal -->
+    <div id="authModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 20px; margin: 5% auto; padding: 2rem; width: 90%; max-width: 500px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 1rem;">
+                <h2 id="authTitle" style="color: #ffd700; font-size: 1.8rem; margin: 0;">
+                    <i class="fas fa-user" style="margin-right: 0.5rem;"></i>Login
+                </h2>
+                <button id="closeAuth" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form id="authForm">
-                <div style="margin-bottom: 1rem;">
-                    <label for="email" style="display: block; color: #fff; margin-bottom: 0.5rem;">Email:</label>
-                    <input type="email" id="email" required style="width: 100%; padding: 0.8rem; border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px; background: rgba(0, 0, 0, 0.5); color: #fff; box-sizing: border-box;">
+            
+            <form id="authForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    <label for="authEmail" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Email</label>
+                    <input type="email" id="authEmail" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
                 </div>
-                <div style="margin-bottom: 1.5rem;">
-                    <label for="password" style="display: block; color: #fff; margin-bottom: 0.5rem;">Password:</label>
-                    <input type="password" id="password" required style="width: 100%; padding: 0.8rem; border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 5px; background: rgba(0, 0, 0, 0.5); color: #fff; box-sizing: border-box;">
+                
+                <div>
+                    <label for="authPassword" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Password</label>
+                    <input type="password" id="authPassword" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
                 </div>
-                <button type="submit" id="authSubmit" style="width: 100%; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; font-size: 1.1rem; font-weight: 700; cursor: pointer;">
-                    Login
+                
+                <div id="registerFields" style="display: none;">
+                    <div>
+                        <label for="authUsername" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Username</label>
+                        <input type="text" id="authUsername" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
+                    </div>
+                    
+                    <div>
+                        <label for="authPsnId" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Discord Username</label>
+                        <input type="text" id="authPsnId" placeholder="username#1234" style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
+                    </div>
+                </div>
+                
+                <button type="submit" id="authSubmit" style="background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 1.1rem;">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login
+                </button>
+                
+                <button type="button" id="toggleAuth" style="background: none; border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Create Account
                 </button>
             </form>
-            <div style="text-align: center; margin-top: 1rem;">
-                <button id="toggleAuth" style="background: none; border: none; color: #ffd700; cursor: pointer; text-decoration: underline;">
-                    Don't have an account? Register
+        </div>
+    </div>
+
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 20px; margin: 2% auto; padding: 2rem; width: 95%; max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 1rem;">
+                <h2 style="color: #ffd700; font-size: 1.8rem; margin: 0;">
+                    <i class="fas fa-file-contract" style="margin-right: 0.5rem;"></i>Terms and Conditions
+                </h2>
+                <button id="closeTerms" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="termsContent" style="color: #fff; line-height: 1.6; margin-bottom: 2rem;">
+                <!-- Terms content will be loaded here -->
+            </div>
+            
+            <div class="terms-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="declineTerms" style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-times" style="margin-right: 0.5rem;"></i>Decline
+                </button>
+                <button id="acceptTerms" style="background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; color: #000; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: 700;">
+                    <i class="fas fa-check" style="margin-right: 0.5rem;"></i>I Accept
                 </button>
             </div>
         </div>
     </div>
+
+    <!-- User Info Modal -->
+    <div id="userInfoModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px);">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); border: 2px solid #ffd700; border-radius: 20px; margin: 5% auto; padding: 2rem; width: 90%; max-width: 500px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid rgba(255, 215, 0, 0.3); padding-bottom: 1rem;">
+                <h2 style="color: #ffd700; font-size: 1.8rem; margin: 0;">
+                    <i class="fas fa-user-edit" style="margin-right: 0.5rem;"></i>User Information
+                </h2>
+                <button id="closeUserInfo" style="background: none; border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="userInfoForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    <label for="userEmail" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Email Address</label>
+                    <input type="email" id="userEmail" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
+                </div>
+                
+                <div>
+                    <label for="userDiscord" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">Discord Username</label>
+                    <input type="text" id="userDiscord" placeholder="username#1234" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
+                </div>
+                
+                <div>
+                    <label for="userGameName" style="display: block; color: #fff; margin-bottom: 0.5rem; font-weight: 600;">In-Game Username</label>
+                    <input type="text" id="userGameName" placeholder="Your Rust username" required style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; color: #fff; font-size: 1rem;">
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" id="saveUserInfo" style="flex: 1; background: linear-gradient(45deg, #00ff88, #00cc6a); border: none; color: #000; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: 700;">
+                        <i class="fas fa-save" style="margin-right: 0.5rem;"></i>Save Info
+                    </button>
+                    <button type="button" id="deleteUserInfo" style="flex: 1; background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 1rem; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-trash" style="margin-right: 0.5rem;"></i>Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" style="position: fixed; top: 20px; right: 20px; z-index: 3000; max-width: 400px;"></div>
 
     <!-- VIP Purchase Modal -->
     <div id="vipPurchaseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 3000; backdrop-filter: blur(10px); opacity: 0; transition: all 0.5s ease;">
