@@ -86,10 +86,32 @@ function initializeApp() {
     
     // Check if terms need to be accepted
     if (!termsAccepted) {
+        disableUserInteractions();
         showTermsModal();
+    } else {
+        enableUserInteractions();
     }
     
     console.log('=== APP READY - WAITING FOR USER INTERACTION ===');
+}
+
+function disableUserInteractions() {
+    // Disable navigation buttons except Terms
+    const navButtons = document.querySelectorAll('.bottom-bar .store-section');
+    navButtons.forEach(button => {
+        if (!button.id || button.id !== 'termsBtn') {
+            button.style.pointerEvents = 'none';
+            button.style.opacity = '0.5';
+        }
+    });
+    
+    // Disable other interactive elements but keep Terms buttons accessible
+    const interactiveElements = document.querySelectorAll('button:not([onclick*="showTermsModal"]), input, select, textarea');
+    interactiveElements.forEach(element => {
+        if (!element.closest('.modal') && !element.id?.includes('terms')) { // Don't disable modal elements or terms buttons
+            element.style.pointerEvents = 'none';
+        }
+    });
 }
 
 function loadTermsContent() {
@@ -181,6 +203,7 @@ function loadPrivacyContent() {
 function showTermsModal() {
     if (elements.termsModal) {
         elements.termsModal.style.display = 'block';
+        elements.termsModal.style.zIndex = '3000'; // Ensure it's on top
     }
 }
 
@@ -207,6 +230,24 @@ function acceptTerms() {
     localStorage.setItem('termsAccepted', 'true');
     hideTermsModal();
     showSuccess('Terms and conditions accepted!');
+    
+    // Enable all interactions after accepting terms
+    enableUserInteractions();
+}
+
+function enableUserInteractions() {
+    // Enable navigation buttons
+    const navButtons = document.querySelectorAll('.bottom-bar .store-section');
+    navButtons.forEach(button => {
+        button.style.pointerEvents = 'auto';
+        button.style.opacity = '1';
+    });
+    
+    // Enable other interactive elements
+    const interactiveElements = document.querySelectorAll('button, input, select, textarea');
+    interactiveElements.forEach(element => {
+        element.style.pointerEvents = 'auto';
+    });
 }
 
 function declineTerms() {
