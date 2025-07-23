@@ -2054,12 +2054,10 @@ async function purchaseResource(resourceType, price, button) {
         return;
     }
     
-    // Show automated payment modal
-    if (window.automatedPaymentSystem) {
-        window.automatedPaymentSystem.showPaymentModal(resourceType, price, userId);
-    } else {
-        showError('Payment system not loaded. Please refresh the page.');
-    }
+    // Redirect to checkout page
+    const itemName = resourceType.replace(/_/g, ' ').toUpperCase();
+    const checkoutUrl = `checkout.html?item=${resourceType}&price=${price}&name=${encodeURIComponent(itemName)}&userId=${encodeURIComponent(userId)}`;
+    window.location.href = checkoutUrl;
 }
 
 // Raiding kit purchase function
@@ -2075,12 +2073,10 @@ async function purchaseRaidingKit(kitType, price, button) {
         return;
     }
     
-    // Show automated payment modal
-    if (window.automatedPaymentSystem) {
-        window.automatedPaymentSystem.showPaymentModal(kitType, price, userId);
-    } else {
-        showError('Payment system not loaded. Please refresh the page.');
-    }
+    // Redirect to checkout page
+    const itemName = kitType.replace(/_/g, ' ').toUpperCase();
+    const checkoutUrl = `checkout.html?item=${kitType}&price=${price}&name=${encodeURIComponent(itemName)}&userId=${encodeURIComponent(userId)}`;
+    window.location.href = checkoutUrl;
 }
 
 // Show payment options modal
