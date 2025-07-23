@@ -5,10 +5,8 @@
 [functions]
   node_bundler = "esbuild"
 
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+# Functions are automatically handled by Netlify
+# No custom redirect needed for functions
 
 [[headers]]
   for = "/*"
