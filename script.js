@@ -338,7 +338,7 @@ function updateCartQuantity(itemId, quantity) {
         } else {
             item.quantity = quantity;
             saveCartToStorage();
-            updateCartUI();
+        updateCartUI();
         }
     }
 }
@@ -361,12 +361,12 @@ function updateCartUI() {
         if (cartItems.length === 0) {
             elements.cartItems.innerHTML = '<p style="text-align: center; color: #ccc; padding: 2rem;">Your cart is empty</p>';
         } else {
-            elements.cartItems.innerHTML = cartItems.map(item => `
+    elements.cartItems.innerHTML = cartItems.map(item => `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid rgba(255, 215, 0, 0.2);">
                     <div style="flex: 1;">
                         <h4 style="color: #fff; margin: 0 0 0.5rem 0;">${item.name}</h4>
                         <p style="color: #ccc; margin: 0;">$${(item.price / 100).toFixed(2)}</p>
-                    </div>
+            </div>
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div style="display: flex; align-items: center; gap: 0.5rem;">
                             <button onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})" style="background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; width: 30px; height: 30px; border-radius: 5px; cursor: pointer;">-</button>
@@ -374,11 +374,11 @@ function updateCartUI() {
                             <button onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})" style="background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; width: 30px; height: 30px; border-radius: 5px; cursor: pointer;">+</button>
                         </div>
                         <button onclick="removeFromCart('${item.id}')" style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff0000; color: #ff0000; padding: 0.5rem; border-radius: 5px; cursor: pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
         }
     }
     
@@ -390,14 +390,14 @@ function updateCartUI() {
 
 function showCart() {
     if (elements.cartModal) {
-        elements.cartModal.style.display = 'block';
+    elements.cartModal.style.display = 'block';
     }
 }
 
 function hideCart() {
     if (elements.cartModal) {
-        elements.cartModal.style.display = 'none';
-    }
+    elements.cartModal.style.display = 'none';
+}
 }
 
 function showUserInfoModal() {
@@ -463,11 +463,11 @@ function createBuyButtons(item) {
             <button onclick="addToCart(${JSON.stringify(item).replace(/"/g, '&quot;')})" 
                     style="flex: 1; background: rgba(255, 215, 0, 0.2); border: 1px solid #ffd700; color: #ffd700; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s ease;">
                 <i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart
-            </button>
+                    </button>
             <button onclick="buyNow(${JSON.stringify(item).replace(/"/g, '&quot;')})" 
                     style="flex: 1; background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; color: #000; padding: 0.8rem; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.3s ease;">
                 <i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now
-            </button>
+                    </button>
         </div>
     `;
 }
@@ -625,7 +625,7 @@ function showSection(sectionName) {
     
     setTimeout(() => {
         targetSection.style.display = 'block';
-        setTimeout(() => {
+    setTimeout(() => {
             targetSection.style.opacity = '1';
             targetSection.style.transform = 'translateY(0)';
         }, 50);
@@ -832,7 +832,7 @@ function showMessage(message, type) {
         border: 1px solid ${type === 'success' ? '#00ff00' : '#ff0000'};
         color: ${type === 'success' ? '#00ff00' : '#ff0000'};
         padding: 1rem;
-        border-radius: 10px;
+            border-radius: 10px; 
         margin-bottom: 1rem;
         font-weight: 600;
         animation: slideIn 0.3s ease;
