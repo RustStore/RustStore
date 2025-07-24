@@ -1256,44 +1256,49 @@
     <!-- automated-payment-system.js removed - using new checkout system -->
 
     <script>
-        // NUCLEAR OPTION - Completely remove sections from DOM
+        // FINAL SOLUTION - Force hide sections and prevent them from showing
         (function() {
-            const sections = ['vipSection', 'resourceKitsSection', 'raidingKitsSection', 'storeSection'];
-            sections.forEach(id => {
-                const section = document.getElementById(id);
-                if (section) {
-                    // Store the section in a global variable so we can restore it later
-                    window['stored_' + id] = section;
-                    // Remove from DOM completely
-                    section.remove();
-                }
-            });
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hideAllSections);
+            } else {
+                hideAllSections();
+            }
             
-            // Force body to only show video background
-            document.body.style.overflow = 'hidden';
-            
-            // Override any show functions to restore sections first
-            window.originalToggleSection = window.toggleSection;
-            window.toggleSection = function(sectionName) {
-                const sectionId = sectionName + 'Section';
-                const storedSection = window['stored_' + sectionId];
-                if (storedSection && !document.getElementById(sectionId)) {
-                    // Restore the section to DOM
-                    document.body.appendChild(storedSection);
-                    storedSection.style.display = 'block';
-                    storedSection.style.visibility = 'visible';
-                    storedSection.style.opacity = '1';
-                    storedSection.style.position = 'relative';
-                    storedSection.style.left = 'auto';
-                    storedSection.style.top = 'auto';
-                    storedSection.style.zIndex = '10';
-                    storedSection.style.pointerEvents = 'auto';
+            function hideAllSections() {
+                const sections = ['vipSection', 'resourceKitsSection', 'raidingKitsSection', 'storeSection'];
+                sections.forEach(id => {
+                    const section = document.getElementById(id);
+                    if (section) {
+                        // Force hide with multiple methods
+                        section.style.display = 'none';
+                        section.style.visibility = 'hidden';
+                        section.style.opacity = '0';
+                        section.style.position = 'absolute';
+                        section.style.left = '-9999px';
+                        section.style.top = '-9999px';
+                        section.style.zIndex = '-9999';
+                        section.style.pointerEvents = 'none';
+                        section.style.height = '0';
+                        section.style.overflow = 'hidden';
+                    }
+                });
+                
+                // Force body to only show video background
+                document.body.style.overflow = 'hidden';
+                
+                // Override any functions that might show sections
+                if (window.toggleSection) {
+                    const originalToggleSection = window.toggleSection;
+                    window.toggleSection = function(sectionName) {
+                        // Only allow showing if explicitly called by navigation
+                        if (event && event.target && event.target.hasAttribute('data-section')) {
+                            return originalToggleSection.call(this, sectionName);
+                        }
+                        return false;
+                    };
                 }
-                // Call original function
-                if (window.originalToggleSection) {
-                    window.originalToggleSection(sectionName);
-                }
-            };
+            }
         })();
     </script>
     <script src="script.js"></script>
