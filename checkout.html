@@ -340,7 +340,7 @@
                         <div class="payment-icon stripe-icon">
                             <i class="fas fa-credit-card"></i>
                         </div>
-                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Credit Card</h4>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Stripe</h4>
                         <p style="color: #ccc; font-size: 0.9rem; margin: 0;">Pay with any major credit card</p>
                     </div>
                 </div>
@@ -424,17 +424,39 @@
         let orderTotal = 0;
         
         // Initialize checkout
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load PayPal SDK dynamically
-            loadPayPalSDK();
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Load PayPal SDK dynamically
+                await loadPayPalSDK();
+                console.log('PayPal SDK loaded and ready');
+            } catch (error) {
+                console.error('Error loading PayPal SDK:', error);
+            }
             
             loadOrderFromCart();
             setupEventListeners();
         });
         
         function loadPayPalSDK() {
-            const paypalScript = document.getElementById('paypal-sdk');
-            paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
+            return new Promise((resolve, reject) => {
+                if (window.paypal) {
+                    resolve();
+                    return;
+                }
+                
+                const paypalScript = document.getElementById('paypal-sdk');
+                paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
+                
+                paypalScript.onload = () => {
+                    console.log('PayPal SDK loaded successfully');
+                    resolve();
+                };
+                
+                paypalScript.onerror = () => {
+                    console.error('Failed to load PayPal SDK');
+                    reject(new Error('PayPal SDK failed to load'));
+                };
+            });
         }
         
         function loadOrderFromCart() {
@@ -518,28 +540,44 @@
             }
         }
         
-        function initializePayPal() {
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: (orderTotal / 100).toFixed(2)
-                            },
-                            description: 'Rust Store Purchase',
-                            custom_id: generateOrderId()
-                        }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        handlePaymentSuccess(details, 'paypal');
-                    });
-                },
-                onError: function(err) {
-                    handlePaymentError(err, 'PayPal');
+        async function initializePayPal() {
+            try {
+                if (!window.paypal) {
+                    console.error('PayPal SDK not loaded');
+                    return;
                 }
-            }).render('#paypal-button-container');
+                
+                // Clear existing buttons
+                const container = document.getElementById('paypal-button-container');
+                container.innerHTML = '';
+                
+                paypal.Buttons({
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: (orderTotal / 100).toFixed(2)
+                                },
+                                description: 'Rust Store Purchase',
+                                custom_id: generateOrderId()
+                            }]
+                        });
+                    },
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            handlePaymentSuccess(details, 'paypal');
+                        });
+                    },
+                    onError: function(err) {
+                        console.error('PayPal error:', err);
+                        handlePaymentError(err, 'PayPal');
+                    }
+                }).render('#paypal-button-container');
+                
+                console.log('PayPal button rendered successfully');
+            } catch (error) {
+                console.error('Error initializing PayPal:', error);
+            }
         }
         
         function setupEventListeners() {
@@ -567,7 +605,7 @@
             
             try {
                 // Create payment intent on your server
-                const response = await fetch('/api/create-payment-intent', {
+                const response = await fetch('/.netlify/functions/create-payment-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
