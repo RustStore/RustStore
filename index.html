@@ -1256,20 +1256,32 @@
     <!-- automated-payment-system.js removed - using new checkout system -->
 
     <script>
-        // IMMEDIATE HIDE - Force hide all sections before anything loads
+        // ULTRA AGGRESSIVE HIDE - Remove sections from DOM completely
         (function() {
             const sections = ['vipSection', 'resourceKitsSection', 'raidingKitsSection', 'storeSection'];
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (section) {
+                    // Move section completely out of view and hide it
                     section.style.display = 'none';
                     section.style.visibility = 'hidden';
                     section.style.opacity = '0';
                     section.style.position = 'absolute';
                     section.style.left = '-9999px';
                     section.style.top = '-9999px';
+                    section.style.zIndex = '-9999';
+                    section.style.pointerEvents = 'none';
+                    
+                    // Also hide the parent container if it exists
+                    const parent = section.parentElement;
+                    if (parent && parent.classList.contains('section-container')) {
+                        parent.style.display = 'none';
+                    }
                 }
             });
+            
+            // Force body to only show video background
+            document.body.style.overflow = 'hidden';
         })();
     </script>
     <script src="script.js"></script>

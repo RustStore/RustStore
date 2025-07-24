@@ -282,9 +282,6 @@ function enableUserInteractions() {
         element.style.cursor = 'auto';
     });
     
-    // Make sure navigation is working
-    setupNavigation();
-    
     console.log('User interactions enabled');
 }
 
