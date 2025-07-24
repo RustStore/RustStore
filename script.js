@@ -16,6 +16,8 @@ const elements = {
     loading: document.getElementById('loading'),
     cartBtn: document.getElementById('cartBtn'),
     cartCount: document.getElementById('cartCount'),
+    topCartBtn: document.getElementById('topCartBtn'),
+    topCartCount: document.getElementById('topCartCount'),
     cartModal: document.getElementById('cartModal'),
     cartItems: document.getElementById('cartItems'),
     cartTotal: document.getElementById('cartTotal'),
@@ -252,6 +254,7 @@ function setupEventListeners() {
     
     // Cart events
     elements.cartBtn.addEventListener('click', showCart);
+    elements.topCartBtn.addEventListener('click', showCart);
     elements.closeCart.addEventListener('click', hideCart);
     elements.checkoutBtn.addEventListener('click', checkout);
     
@@ -524,6 +527,7 @@ function updateCartUI() {
     const total = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
     
     elements.cartCount.textContent = itemCount;
+    elements.topCartCount.textContent = itemCount;
     elements.cartTotal.textContent = `$${(total / 100).toFixed(2)}`;
     
     // Show/hide empty cart message
@@ -747,13 +751,61 @@ function updateUIForLoggedOutUser() {
 
 // Utility Functions
 function showSuccess(message) {
-    // Simple success notification
-    alert(message); // Replace with a proper notification system
+    showNotification(message, 'success');
 }
 
 function showError(message) {
-    // Simple error notification
-    alert('Error: ' + message); // Replace with a proper notification system
+    showNotification(message, 'error');
+}
+
+function showNotification(message, type = 'success') {
+    const container = document.getElementById('notificationContainer');
+    if (!container) return;
+    
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        background: ${type === 'success' ? 'linear-gradient(135deg, #00ff88, #00cc6a)' : 'linear-gradient(135deg, #ff4757, #ff3742)'};
+        color: #000;
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateX(400px);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        max-width: 350px;
+        pointer-events: auto;
+    `;
+    
+    const icon = document.createElement('i');
+    icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+    icon.style.fontSize = '1.2rem';
+    
+    const text = document.createElement('span');
+    text.textContent = message;
+    
+    notification.appendChild(icon);
+    notification.appendChild(text);
+    container.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 400);
+    }, 4000);
 }
 
 // Global functions for onclick handlers
