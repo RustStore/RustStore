@@ -437,26 +437,38 @@
             setupEventListeners();
         });
         
-        function loadPayPalSDK() {
-            return new Promise((resolve, reject) => {
+        async function loadPayPalSDK() {
+            return new Promise(async (resolve, reject) => {
                 if (window.paypal) {
                     resolve();
                     return;
                 }
                 
-                const paypalScript = document.getElementById('paypal-sdk');
-                const clientId = window.PAYMENT_CONFIG?.paypal?.clientId || 'your_paypal_client_id_here';
-                paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD`;
-                
-                paypalScript.onload = () => {
-                    console.log('PayPal SDK loaded successfully');
-                    resolve();
-                };
-                
-                paypalScript.onerror = () => {
-                    console.error('Failed to load PayPal SDK');
-                    reject(new Error('PayPal SDK failed to load'));
-                };
+                try {
+                    // Fetch PayPal Client ID from server
+                    const response = await fetch('/.netlify/functions/get-paypal-config');
+                    const config = await response.json();
+                    
+                    if (!config.clientId) {
+                        throw new Error('PayPal Client ID not available');
+                    }
+                    
+                    const paypalScript = document.getElementById('paypal-sdk');
+                    paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${config.clientId}&currency=USD`;
+                    
+                    paypalScript.onload = () => {
+                        console.log('PayPal SDK loaded successfully');
+                        resolve();
+                    };
+                    
+                    paypalScript.onerror = () => {
+                        console.error('Failed to load PayPal SDK');
+                        reject(new Error('PayPal SDK failed to load'));
+                    };
+                } catch (error) {
+                    console.error('Error loading PayPal config:', error);
+                    reject(error);
+                }
             });
         }
         
