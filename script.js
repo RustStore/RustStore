@@ -58,6 +58,9 @@ function initializeApp() {
         updateUIForLoggedInUser();
     }
     
+    // Load cart from localStorage
+    loadCart();
+    
     // Create sections
     console.log('=== CREATING SECTIONS ===');
     const resourceKitsSection = createResourceKitsSection();
