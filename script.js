@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('=== DOM LOADED, INITIALIZING APP ===');
     initializeApp();
     setupEventListeners();
-    setupNavigation();
 });
 
 function initializeApp() {
@@ -57,6 +56,19 @@ function initializeApp() {
         updateUIForLoggedInUser();
     }
     
+    // Create sections
+    console.log('=== CREATING SECTIONS ===');
+    const resourceKitsSection = createResourceKitsSection();
+    console.log('Resource Kits section created:', resourceKitsSection);
+    console.log('Resource Kits section ID:', resourceKitsSection ? resourceKitsSection.id : 'NO ID');
+    
+    const raidKitsSection = createRaidKitsSection();
+    console.log('Raid Kits section created:', raidKitsSection);
+    console.log('Raid Kits section ID:', raidKitsSection ? raidKitsSection.id : 'NO ID');
+    
+    // Setup navigation after sections are created
+    setupNavigation();
+    
     // Don't load anything by default - wait for user interaction
     console.log('=== APP READY - WAITING FOR USER INTERACTION ===');
 }
@@ -66,7 +78,19 @@ function setupNavigation() {
     const storeSection = document.getElementById('storeSection');
     const vipSection = document.getElementById('vipSection');
     const resourceKitsSection = document.getElementById('resourceKitsSection');
+    const raidKitsSection = document.getElementById('raidKitsSection');
     const navButtons = document.querySelectorAll('.bottom-bar .store-section');
+    
+    console.log('Found sections:');
+    console.log('- storeSection:', storeSection);
+    console.log('- vipSection:', vipSection);
+    console.log('- resourceKitsSection:', resourceKitsSection);
+    console.log('- raidKitsSection:', raidKitsSection);
+    console.log('- navButtons count:', navButtons.length);
+    
+    navButtons.forEach((btn, index) => {
+        console.log(`Button ${index}: "${btn.textContent.trim()}"`);
+    });
     
     // Hide all sections by default - only show video background and navigation
     if (storeSection) {
@@ -89,6 +113,13 @@ function setupNavigation() {
         resourceKitsSection.style.transform = 'translateY(20px)';
     }
     
+    // Hide Raid Kits section by default
+    if (raidKitsSection) {
+        raidKitsSection.style.display = 'none';
+        raidKitsSection.style.opacity = '0';
+        raidKitsSection.style.transform = 'translateY(20px)';
+    }
+    
     // Track current section
     let currentSection = null;
     
@@ -96,21 +127,24 @@ function setupNavigation() {
     navButtons.forEach((button, index) => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
-            const buttonText = button.textContent.trim().toLowerCase();
-            console.log('=== NAVIGATION CLICKED:', buttonText, '===');
-            console.log('Button text length:', buttonText.length);
-            console.log('Button text characters:', Array.from(buttonText).map(c => c.charCodeAt(0)));
+            const buttonText = button.textContent.trim();
+            const buttonTextLower = buttonText.toLowerCase();
+            console.log('=== NAVIGATION CLICKED ===');
+            console.log('Original button text:', buttonText);
+            console.log('Lowercase button text:', buttonTextLower);
+            console.log('Button element:', button);
             
-            if (buttonText === 'vip') {
+            if (buttonTextLower === 'vip') {
+                console.log('=== VIP BUTTON CLICKED ===');
                 // If VIP is already shown, hide it
                 if (currentSection === vipSection) {
                     hideSection(vipSection);
                     currentSection = null;
                 } else {
-                    showSection(vipSection, [storeSection, resourceKitsSection]);
+                    showSection(vipSection, [storeSection, resourceKitsSection, raidKitsSection]);
                     currentSection = vipSection;
                 }
-            } else if (buttonText === 'resource kits' || buttonText === 'resources kits') {
+            } else if (buttonTextLower === 'resource kits' || buttonTextLower === 'resources kits' || buttonText === 'Resource Kits') {
                 console.log('=== RESOURCE KITS CLICKED ===');
                 console.log('Button text matched:', buttonText);
                 // If Resource Kits is already shown, hide it
@@ -119,17 +153,29 @@ function setupNavigation() {
                     currentSection = null;
                 } else {
                     console.log('Showing resourceKitsSection:', resourceKitsSection);
-                    showSection(resourceKitsSection, [storeSection, vipSection]);
+                    showSection(resourceKitsSection, [storeSection, vipSection, raidKitsSection]);
                     currentSection = resourceKitsSection;
                 }
+            } else if (buttonTextLower === 'war kits' || buttonTextLower === 'raid kits' || buttonTextLower === 'raiding kits' || buttonText === 'Raid Kits') {
+                console.log('=== WAR/RAID KITS CLICKED ===');
+                console.log('Button text matched:', buttonText);
+                // If Raid Kits is already shown, hide it
+                if (currentSection === raidKitsSection) {
+                    hideSection(raidKitsSection);
+                    currentSection = null;
+                } else {
+                    console.log('Showing raidKitsSection:', raidKitsSection);
+                    showSection(raidKitsSection, [storeSection, vipSection, resourceKitsSection]);
+                    currentSection = raidKitsSection;
+                }
             } else {
-                // For all other buttons (Building Kits, War Kits, Vehicle Kits, Gun Kits)
+                // For all other buttons (Building Kits, Vehicle Kits, Gun Kits)
                 // Show the store section with items
                 if (currentSection === storeSection) {
                     hideAllSections();
                     currentSection = null;
                 } else {
-                    showSection(storeSection, [vipSection, resourceKitsSection]);
+                    showSection(storeSection, [vipSection, resourceKitsSection, raidKitsSection]);
                     currentSection = storeSection;
                     // Load store items when switching to store
                     loadStoreItems();
@@ -144,6 +190,7 @@ function hideAllSections() {
     const storeSection = document.getElementById('storeSection');
     const vipSection = document.getElementById('vipSection');
     const resourceKitsSection = document.getElementById('resourceKitsSection');
+    const raidKitsSection = document.getElementById('raidKitsSection');
     
     if (storeSection) {
         hideSection(storeSection);
@@ -155,6 +202,10 @@ function hideAllSections() {
     
     if (resourceKitsSection) {
         hideSection(resourceKitsSection);
+    }
+    
+    if (raidKitsSection) {
+        hideSection(raidKitsSection);
     }
 }
 
@@ -398,7 +449,17 @@ function renderStoreItems() {
 
 // Cart Functions
 async function loadCart() {
-    if (!currentUser) return;
+    // Load cart from localStorage for non-logged-in users
+    if (!currentUser) {
+        const savedCart = localStorage.getItem('cartItems');
+        if (savedCart) {
+            cartItems = JSON.parse(savedCart);
+        } else {
+            cartItems = [];
+        }
+        updateCartUI();
+        return;
+    }
     
     try {
         const cart = await apiRequest('/store/cart');
@@ -406,12 +467,42 @@ async function loadCart() {
         updateCartUI();
     } catch (error) {
         console.error('Failed to load cart:', error);
+        // Fallback to localStorage
+        const savedCart = localStorage.getItem('cartItems');
+        if (savedCart) {
+            cartItems = JSON.parse(savedCart);
+            updateCartUI();
+        }
     }
 }
 
 async function addToCart(itemId) {
+    // For non-logged-in users, store in localStorage
     if (!currentUser) {
-        showAuthModal(true);
+        // Find the item in store items
+        const storeItem = storeItems.find(item => item.id === itemId);
+        if (!storeItem) {
+            showError('Item not found');
+            return;
+        }
+        
+        // Check if item already in cart
+        const existingItem = cartItems.find(item => item.item.id === itemId);
+        if (existingItem) {
+            existingItem.quantity += 1;
+            existingItem.subtotal = existingItem.quantity * existingItem.item.price;
+        } else {
+            cartItems.push({
+                item: storeItem,
+                quantity: 1,
+                subtotal: storeItem.price
+            });
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        updateCartUI();
+        showSuccess('Item added to cart!');
         return;
     }
     
@@ -435,23 +526,102 @@ function updateCartUI() {
     elements.cartCount.textContent = itemCount;
     elements.cartTotal.textContent = `$${(total / 100).toFixed(2)}`;
     
-    elements.cartItems.innerHTML = cartItems.map(item => `
-        <div class="flex justify-between items-center p-3 bg-gray-700 rounded-lg">
-            <div>
-                <h4 class="font-bold">${item.item.name}</h4>
-                <p class="text-sm text-gray-300">$${(item.item.price / 100).toFixed(2)} each</p>
+    // Show/hide empty cart message
+    const emptyCartMessage = document.getElementById('emptyCartMessage');
+    if (cartItems.length === 0) {
+        elements.cartItems.innerHTML = '';
+        if (emptyCartMessage) emptyCartMessage.style.display = 'block';
+    } else {
+        if (emptyCartMessage) emptyCartMessage.style.display = 'none';
+        
+        elements.cartItems.innerHTML = cartItems.map(item => `
+            <div style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 15px; padding: 1.5rem; margin-bottom: 1rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                <!-- Shimmer effect -->
+                <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent); transition: left 0.6s ease;"></div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                            <div style="background: linear-gradient(135deg, #ffd700, #ffed4e); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas ${getItemIcon(item.item.type || item.item.resourceType)}" style="color: #000; font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: #fff; font-size: 1.2rem; font-weight: 700; margin: 0; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);">${item.item.name}</h4>
+                                <p style="color: #ccc; font-size: 0.9rem; margin: 0;">${getItemTypeLabel(item.item.type || item.item.resourceType)}</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="color: #ffd700; font-size: 1.1rem; font-weight: 700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">$${(item.item.price / 100).toFixed(2)}</span>
+                            <span style="color: #ccc; font-size: 0.9rem;">each</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 10px; padding: 0.5rem 1rem;">
+                            <span style="color: #ffd700; font-weight: 700; font-size: 1.1rem;">Qty: ${item.quantity}</span>
+                        </div>
+                        <button onclick="removeFromCart('${item.item.id}')" style="background: linear-gradient(135deg, #ff4757, #ff3742); border: none; color: #fff; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 71, 87, 0.3);">
+                            <i class="fas fa-trash" style="font-size: 1rem;"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Item total -->
+                <div style="text-align: right; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 215, 0, 0.1);">
+                    <span style="color: #fff; font-size: 0.9rem; font-weight: 600;">Item Total: </span>
+                    <span style="color: #ffd700; font-size: 1.3rem; font-weight: 700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">$${(item.subtotal / 100).toFixed(2)}</span>
+                </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <span class="text-sm">Qty: ${item.quantity}</span>
-                <button onclick="removeFromCart('${item.item.id}')" class="text-red-400 hover:text-red-300">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
+}
+
+// Helper function to get appropriate icon for item type
+function getItemIcon(type) {
+    const icons = {
+        'resource-bundle': 'fas fa-boxes',
+        'raid-kit': 'fas fa-bomb',
+        'vip': 'fas fa-crown',
+        'vip_plus': 'fas fa-star',
+        'wood': 'fas fa-tree',
+        'stone': 'fas fa-mountain',
+        'metal': 'fas fa-cog',
+        'cloth': 'fas fa-tshirt',
+        'scrap': 'fas fa-recycle',
+        'hqm': 'fas fa-gem',
+        'fuel': 'fas fa-fire'
+    };
+    return icons[type] || 'fas fa-box';
+}
+
+// Helper function to get item type label
+function getItemTypeLabel(type) {
+    const labels = {
+        'resource-bundle': 'Resource Bundle',
+        'raid-kit': 'Raid Kit',
+        'vip': 'VIP Package',
+        'vip_plus': 'VIP+ Package',
+        'wood': 'Wood Bundle',
+        'stone': 'Stone Bundle',
+        'metal': 'Metal Bundle',
+        'cloth': 'Cloth Bundle',
+        'scrap': 'Scrap Bundle',
+        'hqm': 'High Quality Metal',
+        'fuel': 'Low Grade Fuel'
+    };
+    return labels[type] || 'Gaming Item';
 }
 
 async function removeFromCart(itemId) {
+    // For non-logged-in users, remove from localStorage
+    if (!currentUser) {
+        cartItems = cartItems.filter(item => item.item.id !== itemId);
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        updateCartUI();
+        showSuccess('Item removed from cart!');
+        return;
+    }
+    
     try {
         await apiRequest(`/store/cart/${itemId}`, { method: 'DELETE' });
         await loadCart();
@@ -1444,80 +1614,73 @@ function createResourceKitsSection() {
     const resources = [
         {
             name: 'WOOD BUNDLE',
-            icon: 'fas fa-tree',
-            color: '#8B4513',
-            secondaryColor: '#A0522D',
+            color: '#00ff88',
             price: '$3.99',
             priceValue: 399,
             resource: 'wood',
-            amount: '20,000 Wood',
-            image: './images/wood.jpg' // Replace with your actual wood image path
+            amount: '20,000',
+            unit: 'Wood',
+            image: './photos resource kits/Wood.png'
         },
         {
             name: 'STONE PACK',
-            icon: 'fas fa-mountain',
-            color: '#696969',
-            secondaryColor: '#808080',
+            color: '#ff6b35',
             price: '$7.99',
             priceValue: 799,
             resource: 'stone',
-            amount: '30,000 Stone',
-            image: './images/stone.jpg' // Replace with your actual stone image path
+            amount: '30,000',
+            unit: 'Stone',
+            image: './photos resource kits/Stone.png'
         },
         {
             name: 'METAL FRAGMENTS',
-            icon: 'fas fa-cog',
-            color: '#C0C0C0',
-            secondaryColor: '#D3D3D3',
+            color: '#4169e1',
             price: '$7.99',
             priceValue: 799,
             resource: 'metal',
-            amount: '10,000 Metal Fragments',
-            image: './images/metal_fragments.jpg' // Replace with your actual metal fragments image path
+            amount: '10,000',
+            unit: 'Metal Fragments',
+            image: './photos resource kits/Metal Fragments.png'
         },
         {
             name: 'HIGH QUALITY METAL',
-            icon: 'fas fa-gem',
-            color: '#FFD700',
-            secondaryColor: '#FFED4E',
+            color: '#ffd700',
             price: '$8.99',
             priceValue: 899,
             resource: 'hqm',
-            amount: '400 High Quality Metal',
-            image: './images/hqm.jpg' // Replace with your actual HQM image path
+            amount: '400',
+            unit: 'High Quality Metal',
+            image: './photos resource kits/HQM.png'
         },
         {
             name: 'CLOTH BUNDLE',
-            icon: 'fas fa-tshirt',
-            color: '#F5DEB3',
-            secondaryColor: '#DEB887',
+            color: '#ff69b4',
             price: '$4.99',
             priceValue: 499,
             resource: 'cloth',
-            amount: '2,500 Cloth',
-            image: './images/cloth.jpg' // Replace with your actual cloth image path
+            amount: '2,500',
+            unit: 'Cloth',
+            image: './photos resource kits/Cloth.png'
         },
         {
             name: 'LOW GRADE FUEL',
-            icon: 'fas fa-fire',
-            color: '#FFA500',
-            secondaryColor: '#FF8C00',
+            color: '#ff4500',
             price: '$5.99',
             priceValue: 599,
             resource: 'fuel',
-            amount: '2,500 Low Grade Fuel',
-            image: './images/low_grade_fuel.jpg' // Replace with your actual fuel image path
+            amount: '2,500',
+            unit: 'Low Grade Fuel',
+            image: './photos resource kits/Low Grade Fuel.png'
         },
         {
             name: 'SCRAP METAL',
-            icon: 'fas fa-recycle',
-            color: '#CD853F',
-            secondaryColor: '#D2691E',
+            color: '#9370db',
             price: '$8.99',
             priceValue: 899,
             resource: 'scrap',
-            amount: '3,000 Scrap',
-            image: './images/scrap.jpg' // Replace with your actual scrap image path
+            amount: '3,000',
+            unit: 'Scrap',
+            image: './photos resource kits/Scrap.png'
         }
     ];
 
@@ -1533,7 +1696,7 @@ function createResourceKitsSection() {
     const title = document.createElement('h2');
     title.className = 'resource-kits-title';
     title.style.cssText = 'font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);';
-    title.innerHTML = '<i class="fas fa-boxes" style="margin-right: 1rem;"></i>RESOURCE KITS';
+    title.textContent = 'RESOURCE KITS';
 
     const subtitle = document.createElement('p');
     subtitle.className = 'resource-kits-subtitle';
@@ -1546,132 +1709,274 @@ function createResourceKitsSection() {
     // Grid
     const grid = document.createElement('div');
     grid.className = 'resource-kits-grid';
-    grid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;';
+    grid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;';
 
     resources.forEach(resource => {
         const card = document.createElement('div');
         card.className = 'resource-card';
         card.style.cssText = `
-            background: rgba(0, 0, 0, 0.9); 
-            border: 2px solid ${resource.color}; 
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a); 
+            border: 1px solid ${resource.color}20; 
             border-radius: 20px; 
             padding: 0; 
             text-align: center; 
-            backdrop-filter: blur(15px); 
-            box-shadow: 0 15px 40px ${resource.color}40; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px ${resource.color}10; 
             overflow: hidden; 
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            backdrop-filter: blur(10px);
+        `;
+
+        // Add shimmer effect
+        const shimmer = document.createElement('div');
+        shimmer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, ${resource.color}15, transparent);
+            transition: left 0.8s ease;
+            z-index: 1;
+            pointer-events: none;
+        `;
+        card.appendChild(shimmer);
+
+        // Main Image Container
+        const imageContainer = document.createElement('div');
+        imageContainer.style.cssText = `
+            height: 280px; 
+            position: relative; 
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
         `;
 
         // Resource Image
-        const imageDiv = document.createElement('div');
-        imageDiv.className = 'resource-image';
-        imageDiv.style.cssText = `
-            height: 200px; 
-            background: linear-gradient(135deg, ${resource.color}, ${resource.secondaryColor}); 
-            position: relative; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
-        `;
-
-        const imageBg = document.createElement('div');
-        imageBg.style.cssText = `
+        const resourceImage = document.createElement('div');
+        resourceImage.style.cssText = `
             position: absolute; 
             top: 0; 
             left: 0; 
             right: 0; 
             bottom: 0; 
             background: url('${resource.image}') center/cover; 
+            transition: all 0.5s ease;
+        `;
+
+        // Neon Glow Overlay
+        const glowOverlay = document.createElement('div');
+        glowOverlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, ${resource.color}15 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.4s ease;
+        `;
+
+        // Content Overlay
+        const contentOverlay = document.createElement('div');
+        contentOverlay.style.cssText = `
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: left;
+        `;
+
+        const resourceName = document.createElement('h3');
+        resourceName.style.cssText = `
+            font-size: 1.8rem; 
+            color: #ffffff; 
+            margin: 0 0 0.5rem 0; 
+            font-weight: 600; 
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        `;
+        resourceName.textContent = resource.name;
+
+        const resourceAmount = document.createElement('div');
+        resourceAmount.style.cssText = `
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: ${resource.color};
+            text-shadow: 0 0 15px ${resource.color}60;
+            margin-bottom: 0.3rem;
+        `;
+        resourceAmount.textContent = resource.amount;
+
+        const resourceUnit = document.createElement('div');
+        resourceUnit.style.cssText = `
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             opacity: 0.9;
         `;
+        resourceUnit.textContent = resource.unit;
 
-        const contentDiv = document.createElement('div');
-        contentDiv.style.cssText = 'position: relative; z-index: 2; text-align: center;';
+        contentOverlay.appendChild(resourceName);
+        contentOverlay.appendChild(resourceAmount);
+        contentOverlay.appendChild(resourceUnit);
 
-        const icon = document.createElement('div');
-        icon.className = 'resource-icon';
-        icon.style.cssText = 'font-size: 3rem; color: #fff; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);';
-        icon.innerHTML = `<i class="${resource.icon}"></i>`;
+        imageContainer.appendChild(resourceImage);
+        imageContainer.appendChild(glowOverlay);
+        imageContainer.appendChild(contentOverlay);
 
-        const name = document.createElement('h3');
-        name.className = 'resource-name';
-        name.style.cssText = 'font-size: 2rem; color: #fff; margin: 0; font-weight: 700; text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);';
-        name.textContent = resource.name;
-
-        contentDiv.appendChild(icon);
-        contentDiv.appendChild(name);
-        imageDiv.appendChild(imageBg);
-        imageDiv.appendChild(contentDiv);
-
-        // Resource Content
-        const contentSection = document.createElement('div');
-        contentSection.style.cssText = 'padding: 2rem;';
+        // Card Content
+        const cardContent = document.createElement('div');
+        cardContent.style.cssText = 'padding: 2rem;';
 
         const price = document.createElement('div');
-        price.className = 'resource-price';
-        price.style.cssText = `font-size: 2.5rem; color: ${resource.color}; margin-bottom: 1.5rem; font-weight: 700;`;
+        price.style.cssText = `
+            font-size: 2.8rem; 
+            color: ${resource.color}; 
+            margin-bottom: 1.5rem; 
+            font-weight: 700;
+            text-shadow: 0 0 10px ${resource.color}40;
+            letter-spacing: 1px;
+        `;
         price.textContent = resource.price;
 
-        const details = document.createElement('div');
-        details.className = 'resource-details';
-        details.style.cssText = `
-            background: ${resource.color}1A; 
-            border-radius: 15px; 
-            padding: 1.5rem; 
-            margin-bottom: 2rem; 
-            border: 1px solid ${resource.color}4D;
+        // Create button container for cart options
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 15;
         `;
 
-        const detailsTitle = document.createElement('h4');
-        detailsTitle.style.cssText = `color: ${resource.color}; font-size: 1.3rem; margin-bottom: 1rem; font-weight: 600;`;
-        detailsTitle.innerHTML = `<i class="${resource.icon}" style="margin-right: 0.5rem;"></i>Bundle Contents:`;
-
-        const list = document.createElement('ul');
-        list.style.cssText = 'list-style: none; padding: 0; margin: 0; color: #fff;';
-
-        const listItem = document.createElement('li');
-        listItem.style.cssText = `padding: 0.8rem 0; color: #fff; border-bottom: 1px solid ${resource.color}33;`;
-        listItem.innerHTML = `<i class="fas fa-check" style="color: ${resource.color}; margin-right: 0.8rem;"></i>${resource.amount}`;
-
-        list.appendChild(listItem);
-        details.appendChild(detailsTitle);
-        details.appendChild(list);
-
-        const button = document.createElement('button');
-        button.className = 'resource-button';
-        button.style.cssText = `
-            background: linear-gradient(45deg, ${resource.color}, ${resource.secondaryColor}); 
+        // Add to Cart Button
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.style.cssText = `
+            background: linear-gradient(135deg, #2c3e50, #34495e); 
             border: none; 
-            color: ${resource.color === '#C0C0C0' || resource.color === '#FFD700' || resource.color === '#F5DEB3' ? '#000' : '#fff'}; 
-            padding: 1.2rem 2rem; 
-            border-radius: 30px; 
-            font-size: 1.2rem; 
-            font-weight: 700; 
+            color: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            font-weight: 600; 
             cursor: pointer; 
-            width: 100%; 
+            flex: 1; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
+            letter-spacing: 0.5px; 
             transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(44, 62, 80, 0.3);
+            position: relative;
+            z-index: 15;
         `;
-        button.setAttribute('data-resource', resource.resource);
-        button.setAttribute('data-price', resource.priceValue);
-        button.innerHTML = `<i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase ${resource.name.split(' ')[0]} Bundle`;
+        addToCartBtn.setAttribute('data-resource', resource.resource);
+        addToCartBtn.setAttribute('data-price', resource.priceValue);
+        addToCartBtn.setAttribute('data-name', resource.name);
+        addToCartBtn.innerHTML = `<i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart`;
 
-        // Add click event for resource purchase
-        button.addEventListener('click', function() {
+        // Buy Now Button
+        const buyNowBtn = document.createElement('button');
+        buyNowBtn.style.cssText = `
+            background: linear-gradient(135deg, ${resource.color}, ${resource.color}dd); 
+            border: none; 
+            color: #000; 
+            padding: 1rem 1.5rem; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            flex: 1; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px ${resource.color}30;
+            position: relative;
+            z-index: 15;
+        `;
+        buyNowBtn.setAttribute('data-resource', resource.resource);
+        buyNowBtn.setAttribute('data-price', resource.priceValue);
+        buyNowBtn.innerHTML = `<i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now`;
+
+        // Add click events
+        addToCartBtn.addEventListener('click', function() {
+            const resourceType = this.getAttribute('data-resource');
+            const price = this.getAttribute('data-price');
+            const name = this.getAttribute('data-name');
+            addResourceToCart(resourceType, price, name, this);
+        });
+
+        buyNowBtn.addEventListener('click', function() {
             const resourceType = this.getAttribute('data-resource');
             const price = this.getAttribute('data-price');
             purchaseResource(resourceType, price, this);
         });
 
-        contentSection.appendChild(price);
-        contentSection.appendChild(details);
-        contentSection.appendChild(button);
+        buttonContainer.appendChild(addToCartBtn);
+        buttonContainer.appendChild(buyNowBtn);
 
-        card.appendChild(imageDiv);
-        card.appendChild(contentSection);
+        cardContent.appendChild(price);
+        cardContent.appendChild(buttonContainer);
+
+        card.appendChild(imageContainer);
+        card.appendChild(cardContent);
+
+        // EPIC Hover Effects with Particle System
+        card.addEventListener('mouseenter', function() {
+            // Image and glow effects
+            resourceImage.style.transform = 'scale(1.15) rotate(2deg)';
+            glowOverlay.style.opacity = '1';
+            
+            // Enhanced card effects
+            card.style.borderColor = resource.color + '80';
+            card.style.boxShadow = `0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px ${resource.color}30, 0 0 80px ${resource.color}15`;
+            card.style.transform = 'translateY(-5px) scale(1.02)';
+            
+            // Shimmer effect
+            shimmer.style.left = '100%';
+            
+            // Button effects
+            addToCartBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            addToCartBtn.style.boxShadow = `0 0 40px rgba(44, 62, 80, 0.6), 0 0 80px rgba(44, 62, 80, 0.3)`;
+            buyNowBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            buyNowBtn.style.boxShadow = `0 0 40px ${resource.color}60, 0 0 80px ${resource.color}30`;
+            
+            // Text glow effects
+            resourceName.style.textShadow = `0 0 20px ${resource.color}40, 0 0 40px ${resource.color}20`;
+            resourceAmount.style.textShadow = `0 0 25px ${resource.color}80, 0 0 50px ${resource.color}40`;
+            price.style.textShadow = `0 0 20px ${resource.color}60, 0 0 40px ${resource.color}30`;
+            
+            // Create particle effect
+            createParticleEffect(card, resource.color);
+        });
+
+        card.addEventListener('mouseleave', function() {
+            // Reset all effects
+            resourceImage.style.transform = 'scale(1) rotate(0deg)';
+            glowOverlay.style.opacity = '0';
+            
+            card.style.borderColor = resource.color + '20';
+            card.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.4)';
+            card.style.transform = 'translateY(0) scale(1)';
+            
+            addToCartBtn.style.transform = 'translateY(0) scale(1)';
+            addToCartBtn.style.boxShadow = `0 0 15px rgba(44, 62, 80, 0.3)`;
+            buyNowBtn.style.transform = 'translateY(0) scale(1)';
+            buyNowBtn.style.boxShadow = `0 0 20px ${resource.color}30`;
+            
+            // Reset text effects
+            resourceName.style.textShadow = '0 0 10px rgba(0, 0, 0, 0.8)';
+            resourceAmount.style.textShadow = `0 0 15px ${resource.color}60`;
+            price.style.textShadow = `0 0 10px ${resource.color}40`;
+        });
+
+        // Add floating animation to cards
+        card.style.animation = `float 6s ease-in-out infinite`;
+        card.style.animationDelay = `${Math.random() * 2}s`;
+
         grid.appendChild(card);
     });
 
@@ -1686,7 +1991,969 @@ function createResourceKitsSection() {
     return resourceKitsSection;
 }
 
+// Raid Kits Section Functions
+function createRaidKitsSection() {
+    const raidKitsSection = document.createElement('div');
+    raidKitsSection.className = 'raid-kits-section';
+    raidKitsSection.id = 'raidKitsSection';
+    raidKitsSection.style.cssText = `
+        position: relative; 
+        z-index: 10; 
+        padding: 120px 20px 120px 20px; 
+        min-height: calc(100vh - 240px); 
+        background: rgba(0, 0, 0, 0.3); 
+        backdrop-filter: blur(5px); 
+        display: none; 
+        opacity: 0; 
+        transform: translateY(20px); 
+        transition: all 0.5s ease-out;
+    `;
+
+    const raidKits = [
+        {
+            name: 'BEGINNERS RAIDING KIT',
+            color: '#ff4757',
+            price: '$12.99',
+            priceValue: 1299,
+            resource: 'beginners-raid',
+            items: [
+                { name: 'Satchel Charge', amount: '12', image: './photos raiding kits/Satchel-Charge.png' },
+                { name: 'Explosive Ammo', amount: '256', image: './photos raiding kits/Explosive-Rounds.png' }
+            ]
+        },
+        {
+            name: 'ROOKIES ROCKET KIT',
+            color: '#ffa502',
+            price: '$19.99',
+            priceValue: 1999,
+            resource: 'rookies-rocket',
+            items: [
+                { name: 'Rocket Launcher', amount: '1', image: './photos raiding kits/Rocket-Launcher.png' },
+                { name: 'Rocket Ammo', amount: '8', image: './photos raiding kits/Rocket-Ammo.png' }
+            ]
+        },
+        {
+            name: 'ROCKET MANIA KIT',
+            color: '#ff6348',
+            price: '$24.99',
+            priceValue: 2499,
+            resource: 'rocket-mania',
+            items: [
+                { name: 'Rocket Launcher', amount: '2', image: './photos raiding kits/Rocket-Launcher.png' },
+                { name: 'Rocket Ammo', amount: '16', image: './photos raiding kits/Rocket-Ammo.png' }
+            ]
+        },
+        {
+            name: 'DEMOLITIONER KIT',
+            color: '#ff3838',
+            price: '$29.99',
+            priceValue: 2999,
+            resource: 'demolitioner',
+            items: [
+                { name: 'C4 Explosive', amount: '8', image: './photos raiding kits/C4.png' },
+                { name: 'Satchel Charge', amount: '16', image: './photos raiding kits/Satchel-Charge.png' }
+            ]
+        },
+        {
+            name: 'BASE BREACHER KIT',
+            color: '#ff6b6b',
+            price: '$34.99',
+            priceValue: 3499,
+            resource: 'base-breacher',
+            items: [
+                { name: 'C4 Explosive', amount: '12', image: './photos raiding kits/C4.png' },
+                { name: 'Rocket Launcher', amount: '1', image: './photos raiding kits/Rocket-Launcher.png' },
+                { name: 'Rocket Ammo', amount: '6', image: './photos raiding kits/Rocket-Ammo.png' }
+            ]
+        },
+        {
+            name: 'EXPLOSIVE ADDICTED KIT',
+            color: '#ff5252',
+            price: '$39.99',
+            priceValue: 3999,
+            resource: 'explosive-addicted',
+            items: [
+                { name: 'C4 Explosive', amount: '16', image: './photos raiding kits/C4.png' },
+                { name: 'Satchel Charge', amount: '24', image: './photos raiding kits/Satchel-Charge.png' },
+                { name: 'Rocket Launcher', amount: '2', image: './photos raiding kits/Rocket-Launcher.png' },
+                { name: 'Rocket Ammo', amount: '12', image: './photos raiding kits/Rocket-Ammo.png' }
+            ]
+        }
+    ];
+
+    const container = document.createElement('div');
+    container.className = 'raid-kits-container';
+    container.style.cssText = 'max-width: 1200px; margin: 0 auto;';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'raid-kits-header';
+    header.style.cssText = 'text-align: center; margin-bottom: 3rem;';
+
+    const title = document.createElement('h2');
+    title.className = 'raid-kits-title';
+    title.style.cssText = 'font-size: 3rem; font-weight: 700; color: #ffd700; margin-bottom: 1rem; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);';
+    title.textContent = 'RAIDING KITS';
+
+    const subtitle = document.createElement('p');
+    subtitle.className = 'raid-kits-subtitle';
+    subtitle.style.cssText = 'font-size: 1.2rem; color: #fff; max-width: 600px; margin: 0 auto; text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);';
+    subtitle.textContent = 'Devastating explosive power to breach any base';
+
+    header.appendChild(title);
+    header.appendChild(subtitle);
+
+    // Grid
+    const grid = document.createElement('div');
+    grid.className = 'raid-kits-grid';
+    grid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2.5rem; margin-bottom: 3rem;';
+
+    raidKits.forEach((kit, kitIndex) => {
+        const card = document.createElement('div');
+        card.className = 'raid-card';
+        card.style.cssText = `
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a); 
+            border: 1px solid ${kit.color}20; 
+            border-radius: 20px; 
+            padding: 0; 
+            text-align: center; 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px ${kit.color}10; 
+            overflow: hidden; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            backdrop-filter: blur(10px);
+        `;
+
+        // Add shimmer effect
+        const shimmer = document.createElement('div');
+        shimmer.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, ${kit.color}15, transparent);
+            transition: left 0.8s ease;
+            z-index: 1;
+            pointer-events: none;
+        `;
+        card.appendChild(shimmer);
+
+        // Main Image Container with Rotating Photos
+        const imageContainer = document.createElement('div');
+        imageContainer.style.cssText = `
+            height: 320px; 
+            position: relative; 
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        `;
+
+        // Create rotating images
+        kit.items.forEach((item, itemIndex) => {
+            const itemImage = document.createElement('div');
+            itemImage.style.cssText = `
+                position: absolute; 
+                top: 0; 
+                left: 0; 
+                right: 0; 
+                bottom: 0; 
+                background: url('${item.image}') center/cover; 
+                transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+                opacity: ${itemIndex === 0 ? '1' : '0'};
+                transform: ${itemIndex === 0 ? 'scale(1) translateX(0)' : 'scale(1.1) translateX(20px)'};
+                z-index: ${itemIndex === 0 ? '3' : '2'};
+                filter: ${itemIndex === 0 ? 'brightness(1)' : 'brightness(0.7)'};
+            `;
+            itemImage.className = `item-image-${itemIndex}`;
+            itemImage.setAttribute('data-index', itemIndex);
+            itemImage.setAttribute('data-item', item.name);
+            imageContainer.appendChild(itemImage);
+            
+            console.log(`Created image ${itemIndex} for ${kit.name}:`, item.name, 'with opacity:', itemIndex === 0 ? '1' : '0');
+        });
+
+        // Neon Glow Overlay
+        const glowOverlay = document.createElement('div');
+        glowOverlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, ${kit.color}15 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 5;
+            pointer-events: none;
+        `;
+
+        // Content Overlay
+        const contentOverlay = document.createElement('div');
+        contentOverlay.style.cssText = `
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: left;
+            z-index: 10;
+            pointer-events: none;
+        `;
+
+        const kitName = document.createElement('h3');
+        kitName.style.cssText = `
+            font-size: 1.6rem; 
+            color: #ffffff; 
+            margin: 0 0 0.5rem 0; 
+            font-weight: 600; 
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        `;
+        kitName.textContent = kit.name;
+
+        const itemCount = document.createElement('div');
+        itemCount.style.cssText = `
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: ${kit.color};
+            text-shadow: 0 0 15px ${kit.color}60;
+            margin-bottom: 0.3rem;
+        `;
+        itemCount.textContent = `${kit.items.length} Items`;
+
+        const kitType = document.createElement('div');
+        kitType.style.cssText = `
+            font-size: 0.9rem;
+            color: #ffffff;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        `;
+        kitType.textContent = 'Explosive Power';
+
+        contentOverlay.appendChild(kitName);
+        contentOverlay.appendChild(itemCount);
+        contentOverlay.appendChild(kitType);
+
+        imageContainer.appendChild(glowOverlay);
+        imageContainer.appendChild(contentOverlay);
+
+        // Card Content
+        const cardContent = document.createElement('div');
+        cardContent.style.cssText = 'padding: 2rem;';
+
+        const price = document.createElement('div');
+        price.style.cssText = `
+            font-size: 2.8rem; 
+            color: ${kit.color}; 
+            margin-bottom: 1.5rem; 
+            font-weight: 700;
+            text-shadow: 0 0 10px ${kit.color}40;
+            letter-spacing: 1px;
+        `;
+        price.textContent = kit.price;
+
+        // Create button container for cart options
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            position: relative;
+            z-index: 15;
+        `;
+
+        // Add to Cart Button
+        const addToCartBtn = document.createElement('button');
+        addToCartBtn.style.cssText = `
+            background: linear-gradient(135deg, #2c3e50, #34495e); 
+            border: none; 
+            color: #fff; 
+            padding: 1rem 1.5rem; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            flex: 1; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(44, 62, 80, 0.3);
+            position: relative;
+            z-index: 15;
+        `;
+        addToCartBtn.setAttribute('data-resource', kit.resource);
+        addToCartBtn.setAttribute('data-price', kit.priceValue);
+        addToCartBtn.setAttribute('data-name', kit.name);
+        addToCartBtn.innerHTML = `<i class="fas fa-cart-plus" style="margin-right: 0.5rem;"></i>Add to Cart`;
+
+        // Buy Now Button
+        const buyNowBtn = document.createElement('button');
+        buyNowBtn.style.cssText = `
+            background: linear-gradient(135deg, ${kit.color}, ${kit.color}dd); 
+            border: none; 
+            color: #000; 
+            padding: 1rem 1.5rem; 
+            border-radius: 25px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            flex: 1; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px ${kit.color}30;
+            position: relative;
+            z-index: 15;
+        `;
+        buyNowBtn.setAttribute('data-resource', kit.resource);
+        buyNowBtn.setAttribute('data-price', kit.priceValue);
+        buyNowBtn.innerHTML = `<i class="fas fa-bolt" style="margin-right: 0.5rem;"></i>Buy Now`;
+
+        // Add click events
+        addToCartBtn.addEventListener('click', function() {
+            const resourceType = this.getAttribute('data-resource');
+            const price = this.getAttribute('data-price');
+            const name = this.getAttribute('data-name');
+            addRaidKitToCart(resourceType, price, name, this);
+        });
+
+        buyNowBtn.addEventListener('click', function() {
+            const resourceType = this.getAttribute('data-resource');
+            const price = this.getAttribute('data-price');
+            purchaseRaidKit(resourceType, price, this);
+        });
+
+        buttonContainer.appendChild(addToCartBtn);
+        buttonContainer.appendChild(buyNowBtn);
+
+        cardContent.appendChild(price);
+        cardContent.appendChild(buttonContainer);
+
+        card.appendChild(imageContainer);
+        card.appendChild(cardContent);
+
+        // EPIC Hover Effects with Item Reveal
+        card.addEventListener('mouseenter', function() {
+            // Enhanced card effects
+            card.style.borderColor = kit.color + '80';
+            card.style.boxShadow = `0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px ${kit.color}30, 0 0 80px ${kit.color}15`;
+            card.style.transform = 'translateY(-5px) scale(1.02)';
+            
+            // Shimmer effect
+            shimmer.style.left = '100%';
+            
+            // Glow overlay
+            glowOverlay.style.opacity = '1';
+            
+            // Button effects
+            addToCartBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            addToCartBtn.style.boxShadow = `0 0 40px rgba(44, 62, 80, 0.6), 0 0 80px rgba(44, 62, 80, 0.3)`;
+            buyNowBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            buyNowBtn.style.boxShadow = `0 0 40px ${kit.color}60, 0 0 80px ${kit.color}30`;
+            
+            // Text glow effects
+            kitName.style.textShadow = `0 0 20px ${kit.color}40, 0 0 40px ${kit.color}20`;
+            itemCount.style.textShadow = `0 0 25px ${kit.color}80, 0 0 50px ${kit.color}40`;
+            price.style.textShadow = `0 0 20px ${kit.color}60, 0 0 40px ${kit.color}30`;
+            
+            // Image rotation is now continuous (started when card is created)
+            console.log('Hovering over kit:', kit.name);
+            
+            // Create particle effect
+            createParticleEffect(card, kit.color);
+            
+            // Show item details overlay
+            showItemDetails(card, kit);
+        });
+
+        card.addEventListener('mouseenter', function() {
+            // Enhanced card effects
+            card.style.borderColor = kit.color + '80';
+            card.style.boxShadow = `0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px ${kit.color}30, 0 0 80px ${kit.color}15`;
+            card.style.transform = 'translateY(-5px) scale(1.02)';
+            
+            // Shimmer effect
+            shimmer.style.left = '100%';
+            
+            // Glow overlay
+            glowOverlay.style.opacity = '1';
+            
+            // Button effects
+            addToCartBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            addToCartBtn.style.boxShadow = `0 0 40px rgba(44, 62, 80, 0.6), 0 0 80px rgba(44, 62, 80, 0.3)`;
+            buyNowBtn.style.transform = 'translateY(-3px) scale(1.05)';
+            buyNowBtn.style.boxShadow = `0 0 40px ${kit.color}60, 0 0 80px ${kit.color}30`;
+            
+            // Text glow effects
+            kitName.style.textShadow = `0 0 20px ${kit.color}40, 0 0 40px ${kit.color}20`;
+            itemCount.style.textShadow = `0 0 25px ${kit.color}80, 0 0 50px ${kit.color}40`;
+            price.style.textShadow = `0 0 20px ${kit.color}60, 0 0 40px ${kit.color}30`;
+            
+            // Blur all images in the container
+            const images = imageContainer.querySelectorAll('[class^="item-image-"]');
+            images.forEach(img => {
+                img.style.filter = 'blur(8px) brightness(0.3)';
+                img.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            
+            // Stop image rotation during hover
+            if (imageContainer.rotationInterval) {
+                clearInterval(imageContainer.rotationInterval);
+                imageContainer.rotationInterval = null;
+            }
+            
+            // Create particle effect
+            createParticleEffect(card, kit.color);
+            
+            // Show item details overlay on the image container only
+            showItemDetailsOnImageContainer(imageContainer, kit);
+        });
+
+        card.addEventListener('mouseleave', function() {
+            // Reset all effects
+            card.style.borderColor = kit.color + '20';
+            card.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.4)';
+            card.style.transform = 'translateY(0) scale(1)';
+            
+            glowOverlay.style.opacity = '0';
+            
+            addToCartBtn.style.transform = 'translateY(0) scale(1)';
+            addToCartBtn.style.boxShadow = `0 0 15px rgba(44, 62, 80, 0.3)`;
+            buyNowBtn.style.transform = 'translateY(0) scale(1)';
+            buyNowBtn.style.boxShadow = `0 0 20px ${kit.color}30`;
+            
+            // Reset text effects
+            kitName.style.textShadow = '0 0 10px rgba(0, 0, 0, 0.8)';
+            itemCount.style.textShadow = `0 0 15px ${kit.color}60`;
+            price.style.textShadow = `0 0 10px ${kit.color}40`;
+            
+            // Unblur images and restore normal state
+            const images = imageContainer.querySelectorAll('[class^="item-image-"]');
+            images.forEach(img => {
+                img.style.filter = 'brightness(1)';
+            });
+            
+            // Restart image rotation
+            startImageRotation(imageContainer, kit.items.length);
+            
+            // Hide item details overlay
+            hideItemDetailsOnImageContainer(imageContainer);
+        });
+
+        // Add floating animation to cards
+        card.style.animation = `float 6s ease-in-out infinite`;
+        card.style.animationDelay = `${Math.random() * 2}s`;
+
+        // Start image rotation immediately (continuous, not just on hover)
+        startImageRotation(imageContainer, kit.items.length);
+
+        grid.appendChild(card);
+    });
+
+    container.appendChild(header);
+    container.appendChild(grid);
+    raidKitsSection.appendChild(container);
+
+    // Insert before the bottom bar
+    const bottomBar = document.querySelector('.bottom-bar');
+    bottomBar.parentNode.insertBefore(raidKitsSection, bottomBar);
+
+    return raidKitsSection;
+}
+
+// Image Rotation Functions
+function startImageRotation(container, itemCount) {
+    if (itemCount <= 1) return;
+    
+    let currentIndex = 0;
+    const images = container.querySelectorAll('[class^="item-image-"]');
+    
+    console.log('Starting image rotation for container:', container);
+    console.log('Found images:', images.length);
+    console.log('Item count:', itemCount);
+    
+    // Clear any existing interval
+    if (container.rotationInterval) {
+        clearInterval(container.rotationInterval);
+    }
+    
+    // Set initial state - only first image visible
+    images.forEach((img, index) => {
+        if (index === 0) {
+            img.style.opacity = '1';
+            img.style.transform = 'scale(1) translateX(0)';
+            img.style.zIndex = '3';
+            img.style.filter = 'brightness(1)';
+            img.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        } else {
+            img.style.opacity = '0';
+            img.style.transform = 'scale(0.9) translateX(-10px)';
+            img.style.zIndex = '2';
+            img.style.filter = 'brightness(0.6)';
+            img.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        }
+    });
+    
+    container.rotationInterval = setInterval(() => {
+        console.log('Rotating image, current index:', currentIndex);
+        
+        // Hide current image with smooth transition
+        if (images[currentIndex]) {
+            images[currentIndex].style.opacity = '0';
+            images[currentIndex].style.transform = 'scale(0.9) translateX(-10px)';
+            images[currentIndex].style.zIndex = '2';
+            images[currentIndex].style.filter = 'brightness(0.6)';
+        }
+        
+        // Move to next image
+        currentIndex = (currentIndex + 1) % itemCount;
+        
+        // Show new image with smooth transition
+        if (images[currentIndex]) {
+            images[currentIndex].style.opacity = '1';
+            images[currentIndex].style.transform = 'scale(1) translateX(0)';
+            images[currentIndex].style.zIndex = '3';
+            images[currentIndex].style.filter = 'brightness(1)';
+        }
+    }, 3000); // Change every 3 seconds for smoother experience
+}
+
+function stopImageRotation(container) {
+    console.log('Stopping image rotation for container:', container);
+    
+    if (container.rotationInterval) {
+        clearInterval(container.rotationInterval);
+        container.rotationInterval = null;
+    }
+    
+    // No indicator to remove since it's always rotating
+    
+    // Reset to first image
+    const images = container.querySelectorAll('[class^="item-image-"]');
+    console.log('Resetting images, found:', images.length);
+    images.forEach((img, index) => {
+        img.style.opacity = index === 0 ? '1' : '0';
+        img.style.transform = index === 0 ? 'scale(1) translateX(0)' : 'scale(1.1) translateX(20px)';
+        img.style.zIndex = index === 0 ? '3' : '2';
+        console.log(`Image ${index} opacity set to:`, index === 0 ? '1' : '0');
+    });
+}
+
+        // Item Details Overlay Functions (On Image Container Only)
+        function showItemDetailsOnImageContainer(imageContainer, kit) {
+            // Remove existing overlay if any
+            const existingOverlay = imageContainer.querySelector('.item-details-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'item-details-overlay';
+            overlay.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+                backdrop-filter: blur(10px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 1.5rem;
+                z-index: 10;
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                transform: scale(0.95);
+                border-radius: 20px;
+                pointer-events: none;
+            `;
+            
+            const title = document.createElement('h3');
+            title.style.cssText = `
+                color: ${kit.color};
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                text-align: center;
+                text-shadow: 0 0 20px ${kit.color}40;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            `;
+            title.textContent = 'KIT CONTENTS';
+            
+            const itemsList = document.createElement('div');
+            itemsList.style.cssText = `
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+                width: 100%;
+                max-width: 280px;
+            `;
+            
+            kit.items.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 0.8rem 1rem;
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+                    border-radius: 10px;
+                    border: 1px solid ${kit.color}30;
+                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    position: relative;
+                    overflow: hidden;
+                    opacity: 0;
+                    transform: translateY(20px);
+                `;
+                
+                const itemName = document.createElement('span');
+                itemName.style.cssText = `
+                    color: #ffffff;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                `;
+                itemName.textContent = item.name;
+                
+                const itemAmount = document.createElement('span');
+                itemAmount.style.cssText = `
+                    color: ${kit.color};
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    text-shadow: 0 0 15px ${kit.color}50;
+                `;
+                itemAmount.textContent = `x${item.amount}`;
+                
+                itemElement.appendChild(itemName);
+                itemElement.appendChild(itemAmount);
+                itemsList.appendChild(itemElement);
+                
+                // Stagger animation for items
+                setTimeout(() => {
+                    itemElement.style.opacity = '1';
+                    itemElement.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            overlay.appendChild(title);
+            overlay.appendChild(itemsList);
+            imageContainer.appendChild(overlay);
+            
+            // Animate in
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                overlay.style.transform = 'scale(1)';
+            }, 50);
+        }
+        
+        function hideItemDetailsOnImageContainer(imageContainer) {
+            const overlay = imageContainer.querySelector('.item-details-overlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                overlay.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        overlay.parentNode.removeChild(overlay);
+                    }
+                }, 400);
+            }
+        }
+        
+        
+
+// EPIC Particle Effect Function
+function createParticleEffect(card, color) {
+    const particleCount = 15;
+    const particles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: ${color};
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 0 10px ${color}, 0 0 20px ${color};
+            animation: particleFloat 2s ease-out forwards;
+        `;
+        
+        // Random position around the card
+        const rect = card.getBoundingClientRect();
+        const x = Math.random() * rect.width;
+        const y = Math.random() * rect.height;
+        
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        
+        // Random movement
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 100;
+        const endX = x + Math.cos(angle) * distance;
+        const endY = y + Math.sin(angle) * distance;
+        
+        particle.style.setProperty('--end-x', endX + 'px');
+        particle.style.setProperty('--end-y', endY + 'px');
+        
+        card.appendChild(particle);
+        particles.push(particle);
+        
+        // Remove particle after animation
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, 2000);
+    }
+}
+
+// Add EPIC CSS animations
+if (!document.getElementById('epicResourceAnimations')) {
+    const style = document.createElement('style');
+    style.id = 'epicResourceAnimations';
+    style.textContent = `
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(0.5deg); }
+            50% { transform: translateY(-4px) rotate(0deg); }
+            75% { transform: translateY(-12px) rotate(-0.5deg); }
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(var(--end-x), var(--end-y)) scale(1.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px currentColor; }
+            50% { box-shadow: 0 0 40px currentColor, 0 0 60px currentColor; }
+        }
+        
+        .resource-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .resource-card:hover {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // Resource purchase function
+async function addResourceToCart(resourceType, price, name, button) {
+    console.log('=== ADDING RESOURCE TO CART ===', resourceType, price, name);
+    
+    // Disable button
+    button.disabled = true;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Adding...';
+    
+    try {
+        // Create a cart item object
+        const cartItem = {
+            id: `resource-${resourceType}`,
+            name: name,
+            price: parseInt(price),
+            type: 'resource-bundle',
+            resourceType: resourceType
+        };
+        
+        // For non-logged-in users, store in localStorage
+        if (!currentUser) {
+            // Check if item already in cart
+            const existingItem = cartItems.find(item => item.item.id === cartItem.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.subtotal = existingItem.quantity * existingItem.item.price;
+            } else {
+                cartItems.push({
+                    item: cartItem,
+                    quantity: 1,
+                    subtotal: cartItem.price
+                });
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartUI();
+            showSuccess(`${name} added to cart!`);
+            button.innerHTML = '<i class="fas fa-check" style="margin-right: 0.5rem;"></i>Added!';
+            
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }, 2000);
+            return;
+        }
+        
+        // For logged-in users, use API
+        await apiRequest('/store/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                item_id: cartItem.id, 
+                quantity: 1,
+                item_data: cartItem
+            })
+        });
+        
+        await loadCart();
+        showSuccess(`${name} added to cart!`);
+        button.innerHTML = '<i class="fas fa-check" style="margin-right: 0.5rem;"></i>Added!';
+        
+        setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Add to cart error:', error);
+        showError(error.message || 'Failed to add resource to cart');
+        button.disabled = false;
+        button.innerHTML = originalText;
+    }
+}
+
+async function addRaidKitToCart(resourceType, price, name, button) {
+    console.log('=== ADDING RAID KIT TO CART ===', resourceType, price, name);
+    
+    // Disable button
+    button.disabled = true;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Adding...';
+    
+    try {
+        // Create a cart item object
+        const cartItem = {
+            id: `raid-${resourceType}`,
+            name: name,
+            price: parseInt(price),
+            type: 'raid-kit',
+            resourceType: resourceType
+        };
+        
+        // For non-logged-in users, store in localStorage
+        if (!currentUser) {
+            // Check if item already in cart
+            const existingItem = cartItems.find(item => item.item.id === cartItem.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+                existingItem.subtotal = existingItem.quantity * existingItem.item.price;
+            } else {
+                cartItems.push({
+                    item: cartItem,
+                    quantity: 1,
+                    subtotal: cartItem.price
+                });
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            updateCartUI();
+            showSuccess(`${name} added to cart!`);
+            button.innerHTML = '<i class="fas fa-check" style="margin-right: 0.5rem;"></i>Added!';
+            
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }, 2000);
+            return;
+        }
+        
+        // For logged-in users, use API
+        await apiRequest('/store/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                item_id: cartItem.id, 
+                quantity: 1,
+                item_data: cartItem
+            })
+        });
+        
+        await loadCart();
+        showSuccess(`${name} added to cart!`);
+        button.innerHTML = '<i class="fas fa-check" style="margin-right: 0.5rem;"></i>Added!';
+        
+        setTimeout(() => {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Add to cart error:', error);
+        showError(error.message || 'Failed to add raid kit to cart');
+        button.disabled = false;
+        button.innerHTML = originalText;
+    }
+}
+
+async function purchaseRaidKit(resourceType, price, button) {
+    console.log('=== PURCHASING RAID KIT ===', resourceType, price);
+    
+    if (!currentUser) {
+        showError('Please log in to purchase raid kits');
+        return;
+    }
+    
+    // Disable button
+    button.disabled = true;
+    button.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.8rem;"></i>Processing...';
+    
+    try {
+        const response = await apiRequest('/purchase-raid-kit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                resourceType,
+                price: parseInt(price),
+                userId: currentUser.id
+            })
+        });
+        
+        if (response.success) {
+            showSuccess(`Raid kit purchased successfully! Check your Discord for delivery.`);
+            button.innerHTML = '<i class="fas fa-check" style="margin-right: 0.8rem;"></i>Purchased!';
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerHTML = `<i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase Kit`;
+            }, 3000);
+        } else {
+            throw new Error(response.message || 'Purchase failed');
+        }
+    } catch (error) {
+        console.error('Raid kit purchase error:', error);
+        showError(error.message || 'Failed to purchase raid kit');
+        button.disabled = false;
+        button.innerHTML = `<i class="fas fa-shopping-cart" style="margin-right: 0.8rem;"></i>Purchase Kit`;
+    }
+}
+
 async function purchaseResource(resourceType, price, button) {
     console.log('=== PURCHASING RESOURCE ===');
     console.log('Resource:', resourceType);
@@ -1724,7 +2991,4 @@ async function purchaseResource(resourceType, price, button) {
     }
 }
 
-// Initialize Resource Kits section
-console.log('=== CREATING RESOURCE KITS SECTION ===');
-const resourceKitsSection = createResourceKitsSection();
-console.log('Resource Kits section created:', resourceKitsSection);
+// Sections are now created in initializeApp()
