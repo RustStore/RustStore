@@ -80,21 +80,8 @@ function setupKitContents() {
     kitCards.forEach(card => {
         const contentsDiv = card.querySelector('.kit-contents');
         if (contentsDiv) {
-            // Show contents on hover
-            card.addEventListener('mouseenter', () => {
-                contentsDiv.classList.add('show');
-            });
-            
-            card.addEventListener('mouseleave', () => {
-                contentsDiv.classList.remove('show');
-            });
-            
-            // Also show on click for mobile
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('button')) {
-                    contentsDiv.classList.toggle('show');
-                }
-            });
+            // Always show contents - no hover required
+            contentsDiv.classList.add('show');
         }
     });
 }
