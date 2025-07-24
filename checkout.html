@@ -290,7 +290,7 @@
                             <p style="color: #ccc; margin: 0; font-size: 0.9rem;">Complete your Rust store purchase</p>
                         </div>
                     </div>
-                    <button onclick="window.history.back()" style="background: rgba(255, 255, 255, 0.1); border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                    <button onclick="goBackToStore()" style="background: rgba(255, 255, 255, 0.1); border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -696,6 +696,12 @@
         
         function generateOrderId() {
             return 'order_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function goBackToStore() {
+            // Preserve cart by not clearing localStorage
+            // Just navigate back to the store
+            window.location.href = '/index.html';
         }
     </script>
 </body>
