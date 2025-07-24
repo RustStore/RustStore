@@ -315,8 +315,26 @@
             opacity: 1 !important;
             position: fixed !important;
             left: 0 !important;
+            bottom: 0 !important;
             top: auto !important;
             z-index: 1001 !important;
+            background: rgba(0, 0, 0, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            padding: 1.5rem 0 !important;
+            border-top: 2px solid #ffd700 !important;
+            width: 100% !important;
+        }
+        
+        .bottom-bar-content {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .store-section {
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
     </style>
 </head>
@@ -1019,6 +1037,18 @@
                 });
                 // Don't hide body overflow to keep navigation visible
                 // document.body.style.overflow = 'hidden';
+                
+                // Ensure bottom bar is always visible
+                const bottomBar = document.querySelector('.bottom-bar');
+                if (bottomBar) {
+                    bottomBar.style.display = 'block';
+                    bottomBar.style.visibility = 'visible';
+                    bottomBar.style.opacity = '1';
+                    bottomBar.style.position = 'fixed';
+                    bottomBar.style.bottom = '0';
+                    bottomBar.style.left = '0';
+                    bottomBar.style.zIndex = '1001';
+                }
                 
                 // Override any functions that might show sections
                 if (window.toggleSection) {
