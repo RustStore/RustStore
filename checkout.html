@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
     <script src="payment-config.js"></script>
-    <script id="paypal-sdk"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=ASEu5e6JYe48UKpHMud8YY6QnLGlMnCGvvr7GQRXtE7_qujoLyOYhO2nCflXpGmG_CPxsmzYVmu3wWLj&currency=USD"></script>
     <style>
         * { font-family: 'Rajdhani', sans-serif; }
         .orbitron { font-family: 'Orbitron', monospace; }
@@ -424,40 +424,12 @@
         let orderTotal = 0;
         
         // Initialize checkout
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                // Load PayPal SDK dynamically
-                await loadPayPalSDK();
-                console.log('PayPal SDK loaded and ready');
-            } catch (error) {
-                console.error('Error loading PayPal SDK:', error);
-            }
-            
+        document.addEventListener('DOMContentLoaded', function() {
             loadOrderFromCart();
             setupEventListeners();
         });
         
-        function loadPayPalSDK() {
-            return new Promise((resolve, reject) => {
-                if (window.paypal) {
-                    resolve();
-                    return;
-                }
-                
-                const paypalScript = document.getElementById('paypal-sdk');
-                paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
-                
-                paypalScript.onload = () => {
-                    console.log('PayPal SDK loaded successfully');
-                    resolve();
-                };
-                
-                paypalScript.onerror = () => {
-                    console.error('Failed to load PayPal SDK');
-                    reject(new Error('PayPal SDK failed to load'));
-                };
-            });
-        }
+        // PayPal SDK is now loaded directly in HTML head
         
         function loadOrderFromCart() {
             // Load cart items from localStorage
@@ -540,17 +512,12 @@
             }
         }
         
-        async function initializePayPal() {
-            try {
-                if (!window.paypal) {
-                    console.error('PayPal SDK not loaded');
-                    return;
-                }
-                
-                // Clear existing buttons
-                const container = document.getElementById('paypal-button-container');
-                container.innerHTML = '';
-                
+        function initializePayPal() {
+            // Clear existing buttons
+            const container = document.getElementById('paypal-button-container');
+            container.innerHTML = '';
+            
+            if (window.paypal) {
                 paypal.Buttons({
                     createOrder: function(data, actions) {
                         return actions.order.create({
@@ -575,8 +542,9 @@
                 }).render('#paypal-button-container');
                 
                 console.log('PayPal button rendered successfully');
-            } catch (error) {
-                console.error('Error initializing PayPal:', error);
+            } else {
+                console.error('PayPal SDK not available');
+                container.innerHTML = '<p style="color: #ff4757;">PayPal is currently unavailable. Please try Stripe instead.</p>';
             }
         }
         
