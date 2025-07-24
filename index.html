@@ -16,6 +16,16 @@
             display: none !important;
             opacity: 0 !important;
             visibility: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
+            top: -9999px !important;
+        }
+        
+        /* Hide all section classes */
+        .vip-section, .resource-kits-section, .raiding-kits-section, .store-section {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
         }
         
         /* Simple Working Animation */
@@ -1245,6 +1255,23 @@
     <link rel="stylesheet" href="payment-styles.css">
     <!-- automated-payment-system.js removed - using new checkout system -->
 
+    <script>
+        // IMMEDIATE HIDE - Force hide all sections before anything loads
+        (function() {
+            const sections = ['vipSection', 'resourceKitsSection', 'raidingKitsSection', 'storeSection'];
+            sections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.style.display = 'none';
+                    section.style.visibility = 'hidden';
+                    section.style.opacity = '0';
+                    section.style.position = 'absolute';
+                    section.style.left = '-9999px';
+                    section.style.top = '-9999px';
+                }
+            });
+        })();
+    </script>
     <script src="script.js"></script>
 </body>
 </html> 
