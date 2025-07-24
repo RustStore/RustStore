@@ -11,30 +11,30 @@
         * { font-family: 'Rajdhani', sans-serif; }
         .orbitron { font-family: 'Orbitron', monospace; }
         
-        /* Continuous Slide Animation - Right to Left */
-        @keyframes slideImages2 {
-            0%, 45% { transform: translateX(0); }
-            45%, 50% { transform: translateX(-100%); }
-            50%, 95% { transform: translateX(0); }
-            95%, 100% { transform: translateX(-100%); }
+        /* Simple Working Animation */
+        @keyframes showImage {
+            0%, 45% { opacity: 1; }
+            45%, 50% { opacity: 0; }
+            50%, 95% { opacity: 1; }
+            95%, 100% { opacity: 0; }
         }
         
-        @keyframes slideImages3 {
-            0%, 28% { transform: translateX(0); }
-            28%, 33% { transform: translateX(-100%); }
-            33%, 61% { transform: translateX(0); }
-            61%, 66% { transform: translateX(-100%); }
-            66%, 100% { transform: translateX(0); }
+        @keyframes showImage3 {
+            0%, 28% { opacity: 1; }
+            28%, 33% { opacity: 0; }
+            33%, 61% { opacity: 1; }
+            61%, 66% { opacity: 0; }
+            66%, 100% { opacity: 1; }
         }
         
-        @keyframes slideImages4 {
-            0%, 22% { transform: translateX(0); }
-            22%, 27% { transform: translateX(-100%); }
-            27%, 47% { transform: translateX(0); }
-            47%, 52% { transform: translateX(-100%); }
-            52%, 72% { transform: translateX(0); }
-            72%, 77% { transform: translateX(-100%); }
-            77%, 100% { transform: translateX(0); }
+        @keyframes showImage4 {
+            0%, 22% { opacity: 1; }
+            22%, 27% { opacity: 0; }
+            27%, 47% { opacity: 1; }
+            47%, 52% { opacity: 0; }
+            52%, 72% { opacity: 1; }
+            72%, 77% { opacity: 0; }
+            77%, 100% { opacity: 1; }
         }
         
         /* Kit Contents Display */
@@ -796,8 +796,8 @@
                 <!-- Beginners Raiding Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00ff88; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);">
                     <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.5); position: relative;">
-                        <img src="photos raiding kits/Satchel-Charge.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite;">
-                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite 2.7s;">
+                        <img src="photos raiding kits/Satchel-Charge.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Beginners Raiding Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite 3s;">
                     </div>
                     <h3 style="color: #00ff88; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);">BEGINNERS RAIDING KIT</h3>
                     <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Perfect starter kit for new raiders. Effective against wooden and stone structures.</p>
@@ -828,8 +828,8 @@
                 <!-- Rookies Rocket Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff6b35; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);">
                     <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff6b35; box-shadow: 0 0 15px rgba(255, 107, 53, 0.5); position: relative;">
-                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite;">
-                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite 2.7s;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rookies Rocket Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite 3s;">
                     </div>
                     <h3 style="color: #ff6b35; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);">ROOKIES ROCKET KIT</h3>
                     <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Entry-level rocket raiding kit. Perfect for learning rocket-based raiding tactics.</p>
@@ -860,9 +860,9 @@
                 <!-- Rocket Mania Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ffd700; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">
                     <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ffd700; box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); position: relative;">
-                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages3 9s infinite;">
-                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages3 9s infinite 2.52s;">
-                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages3 9s infinite 5.04s;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage3 9s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage3 9s infinite 3s;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Rocket Mania Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage3 9s infinite 6s;">
                     </div>
                     <h3 style="color: #ffd700; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">ROCKET MANIA KIT</h3>
                     <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Advanced rocket raiding kit for serious destruction.</p>
@@ -924,8 +924,8 @@
                 <!-- Base Breacher Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #00bfff; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);">
                     <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #00bfff; box-shadow: 0 0 15px rgba(0, 191, 255, 0.5); position: relative;">
-                        <img src="photos raiding kits/C4.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite;">
-                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages2 6s infinite 2.7s;">
+                        <img src="photos raiding kits/C4.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Base Breacher Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage 6s infinite 3s;">
                     </div>
                     <h3 style="color: #00bfff; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);">BASE BREACHER</h3>
                     <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">Ultimate base destruction kit. Breach any base with maximum efficiency.</p>
@@ -956,10 +956,10 @@
                 <!-- Explosive Addicted Kit -->
                 <div class="raiding-kit-card" style="background: rgba(0, 0, 0, 0.8); border: 2px solid #ff0000; border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);">
                     <div style="width: 200px; height: 200px; margin: 0 auto 1rem; border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.5); position: relative;">
-                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages4 12s infinite;">
-                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages4 12s infinite 2.64s;">
-                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages4 12s infinite 5.28s;">
-                        <img src="photos raiding kits/C4.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: slideImages4 12s infinite 7.92s;">
+                        <img src="photos raiding kits/Rocket-Launcher.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage4 12s infinite;">
+                        <img src="photos raiding kits/Rocket-Ammo.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage4 12s infinite 3s;">
+                        <img src="photos raiding kits/Explosive-Rounds.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage4 12s infinite 6s;">
+                        <img src="photos raiding kits/C4.png" alt="Explosive Addicted Kit" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; animation: showImage4 12s infinite 9s;">
                     </div>
                     <h3 style="color: #ff0000; font-size: 1.5rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);">EXPLOSIVE ADDICTED</h3>
                     <p style="color: #ccc; margin-bottom: 1rem; font-size: 1rem;">The ultimate explosive kit for maximum destruction.</p>
