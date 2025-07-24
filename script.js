@@ -571,9 +571,9 @@ function setupNavigation() {
 }
 
 function hideAllSections() {
-    const sections = ['store', 'vip', 'resourceKits', 'raidingKits'];
+    const sections = ['storeSection', 'vipSection', 'resourceKitsSection', 'raidingKitsSection'];
     sections.forEach(sectionName => {
-        const section = document.getElementById(sectionName + 'Section');
+        const section = document.getElementById(sectionName);
         if (section) {
             hideSection(section);
         }
@@ -592,9 +592,9 @@ function hideSection(section) {
 }
 
 function toggleSection(sectionName) {
-    const targetSection = document.getElementById(sectionName + 'Section');
+    const targetSection = document.getElementById(sectionName);
     if (!targetSection) {
-        console.warn('Section not found:', sectionName + 'Section');
+        console.warn('Section not found:', sectionName);
         return;
     }
     
@@ -615,9 +615,9 @@ function toggleSection(sectionName) {
 }
 
 function showSection(sectionName) {
-    const targetSection = document.getElementById(sectionName + 'Section');
+    const targetSection = document.getElementById(sectionName);
     if (!targetSection) {
-        console.warn('Section not found:', sectionName + 'Section');
+        console.warn('Section not found:', sectionName);
         return;
     }
     
