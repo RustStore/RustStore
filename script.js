@@ -257,6 +257,7 @@ function hideTermsModal() {
 }
 
 function acceptTerms() {
+    console.log('acceptTerms function called!');
     termsAccepted = true;
     localStorage.setItem('termsAccepted', 'true');
     hideTermsModal();
@@ -520,7 +521,18 @@ function setupEventListeners() {
         elements.closeTerms.addEventListener('click', hideTermsModal);
     }
     if (elements.acceptTerms) {
+        console.log('Accept Terms button found, adding event listener');
         elements.acceptTerms.addEventListener('click', acceptTerms);
+    } else {
+        console.error('Accept Terms button NOT found!');
+        // Try to find it directly
+        const acceptBtn = document.getElementById('acceptTerms');
+        if (acceptBtn) {
+            console.log('Found acceptTerms button directly, adding listener');
+            acceptBtn.addEventListener('click', acceptTerms);
+        } else {
+            console.error('Could not find acceptTerms button at all!');
+        }
     }
     if (elements.declineTerms) {
         elements.declineTerms.addEventListener('click', declineTerms);
