@@ -282,6 +282,9 @@ function enableUserInteractions() {
         element.style.cursor = 'auto';
     });
     
+    // Make sure navigation is working
+    setupNavigation();
+    
     console.log('User interactions enabled');
 }
 
@@ -553,35 +556,11 @@ function setupEventListeners() {
 
 function setupNavigation() {
     console.log('=== SETTING UP NAVIGATION ===');
-    const storeSection = document.getElementById('storeSection');
-    const vipSection = document.getElementById('vipSection');
-    const resourceKitsSection = document.getElementById('resourceKitsSection');
-    const raidingKitsSection = document.getElementById('raidingKitsSection');
+    
+    // Force hide all sections immediately
+    hideAllSections();
+    
     const navButtons = document.querySelectorAll('[data-section]');
-    
-    // Check if sections exist
-    if (!storeSection) {
-        console.warn('Store section not found');
-    }
-    if (!vipSection) {
-        console.warn('VIP section not found');
-    }
-    if (!resourceKitsSection) {
-        console.warn('Resource Kits section not found');
-    }
-    if (!raidingKitsSection) {
-        console.warn('Raiding Kits section not found');
-    }
-    
-    // Hide all sections by default
-    const sections = [storeSection, vipSection, resourceKitsSection, raidingKitsSection];
-    sections.forEach(section => {
-        if (section) {
-            section.style.display = 'none';
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-        }
-    });
     
     // Add click listeners to navigation buttons
     navButtons.forEach(button => {
