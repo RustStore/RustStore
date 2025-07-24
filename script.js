@@ -587,6 +587,7 @@ function hideSection(section) {
     if (section) {
         section.style.opacity = '0';
         section.style.transform = 'translateY(20px)';
+        section.style.visibility = 'hidden';
         setTimeout(() => {
             section.style.display = 'none';
         }, 200);
@@ -601,7 +602,7 @@ function toggleSection(sectionName) {
     }
     
     // Check if the section is currently visible
-    if (targetSection.style.display === 'block') {
+    if (targetSection.style.display === 'block' || targetSection.style.visibility === 'visible') {
         // Section is open, so close it
         hideSection(targetSection);
     } else {
@@ -609,11 +610,10 @@ function toggleSection(sectionName) {
         hideAllSections();
         setTimeout(() => {
             targetSection.style.display = 'block';
-            setTimeout(() => {
-                targetSection.style.opacity = '1';
-                targetSection.style.transform = 'translateY(0)';
-            }, 50);
-        }, 200);
+            targetSection.style.visibility = 'visible';
+            targetSection.style.opacity = '1';
+            targetSection.style.transform = 'translateY(0)';
+        }, 100);
     }
 }
 

@@ -11,6 +11,13 @@
         * { font-family: 'Rajdhani', sans-serif; }
         .orbitron { font-family: 'Orbitron', monospace; }
         
+        /* Force hide all sections by default */
+        #vipSection, #resourceKitsSection, #raidingKitsSection, #storeSection {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+        
         /* Simple Working Animation */
         @keyframes showImage {
             0%, 45% { opacity: 1; }
