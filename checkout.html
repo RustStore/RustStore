@@ -7,598 +7,648 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="payment-config.js"></script>
+    <script id="paypal-sdk"></script>
     <style>
+        * { font-family: 'Rajdhani', sans-serif; }
+        .orbitron { font-family: 'Orbitron', monospace; }
+        
         body {
-            font-family: 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            background: #000;
+            overflow-x: hidden;
         }
-        .orbitron {
-            font-family: 'Orbitron', monospace;
+        
+        .checkout-container {
+            position: relative;
+            z-index: 10;
+            padding: 120px 20px 120px 20px;
+            min-height: calc(100vh - 240px);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
         }
-        .gold-gradient {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-        }
-        .gold-text {
-            color: #ffd700;
-        }
-        .gold-border {
-            border-color: #ffd700;
-        }
-        .dark-card {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-        }
-        .glow {
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
-        }
-        /* Stripe Elements Styling */
-        .StripeElement {
-            background: #1f2937;
-            border: 1px solid #4b5563;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            color: white;
-            font-size: 16px;
-        }
-        .StripeElement--focus {
-            border-color: #ffd700;
-            outline: none;
-        }
-        .StripeElement--invalid {
-            border-color: #ef4444;
-        }
-        .StripeElement--webkit-autofill {
-            background-color: #1f2937 !important;
-        }
-        /* Payment Options Styling */
-        .payment-option {
-            transition: all 0.3s ease;
-        }
-        .payment-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
-        }
-        .payment-expanded {
-            max-height: 500px;
-            opacity: 1;
-            transition: all 0.3s ease;
-        }
-        .payment-collapsed {
-            max-height: 0;
-            opacity: 0;
+        
+        .checkout-card {
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.98));
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 1000px;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.2);
             overflow: hidden;
+        }
+        
+        .checkout-header {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+            padding: 2rem 2rem 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .checkout-content {
+            padding: 2rem;
+        }
+        
+        .order-summary {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .payment-method {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .payment-method:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .payment-method.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .payment-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .paypal-icon {
+            color: #0070ba;
+        }
+        
+        .stripe-icon {
+            color: #6772e5;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .card-element {
+            padding: 1rem;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+        }
+        
+        .pay-button {
+            width: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            color: #000;
+            padding: 1.2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .pay-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+        
+        .pay-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .item-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .item-icon {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 1.2rem;
+        }
+        
+        .total-section {
+            border-top: 2px solid rgba(255, 215, 0, 0.3);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .total-final {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkout-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body class="text-white">
-    <!-- Header -->
-    <header class="bg-black border-b border-yellow-500/30 py-4">
-        <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-            <div class="orbitron text-2xl font-bold gold-text glow">
-                <i class="fas fa-shield-alt mr-2"></i>RUST STORE
+    <!-- Full Screen Background YouTube Video -->
+    <div id="youtube-background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0.8; pointer-events: none;">
+        <iframe 
+            id="youtube-video"
+            width="100%" 
+            height="100%" 
+            src="https://www.youtube.com/embed/2IZshrjPzB4?autoplay=1&mute=1&loop=1&playlist=2IZshrjPzB4&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&origin=http://localhost:3000" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            style="pointer-events: none;">
+        </iframe>
+    </div>
+
+    <div class="checkout-container">
+        <div class="checkout-card">
+            <!-- Checkout Header -->
+            <div class="checkout-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center;">
+                        <div style="background: linear-gradient(135deg, #ffd700, #ffed4e); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">
+                            <i class="fas fa-credit-card" style="color: #000; font-size: 1.5rem;"></i>
+                        </div>
+                        <div>
+                            <h2 style="color: #ffd700; font-size: 1.8rem; margin: 0; font-weight: 700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">
+                                Secure Checkout
+                            </h2>
+                            <p style="color: #ccc; margin: 0; font-size: 0.9rem;">Complete your Rust store purchase</p>
+                        </div>
+                    </div>
+                    <button onclick="window.history.back()" style="background: rgba(255, 255, 255, 0.1); border: none; color: #ffd700; font-size: 1.5rem; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-            <a href="index.html" class="text-yellow-500 hover:text-yellow-400 transition-colors">
-                <i class="fas fa-arrow-left mr-2"></i>Back to Store
-            </a>
-        </div>
-    </header>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            <!-- Left Column - Order Summary -->
-            <div class="space-y-6">
-                <h2 class="orbitron text-2xl font-bold gold-text glow">
-                    <i class="fas fa-shopping-cart mr-3"></i>Your Order
-                </h2>
-                
-                <!-- Order Items -->
-                <div class="dark-card rounded-lg p-6 space-y-4">
-                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-500/10 to-transparent rounded-lg border border-yellow-500/20">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-boxes text-2xl text-black"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-lg" id="itemName">Wood Bundle</h3>
-                                <p class="text-gray-400 text-sm">Essential resources for your base</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-2xl font-bold gold-text" id="itemPrice">$3.99</p>
-                            <button class="text-red-400 hover:text-red-300 text-sm mt-1">
-                                <i class="fas fa-trash mr-1"></i>Remove
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Discount Code -->
-                <div class="dark-card rounded-lg p-6">
-                    <h3 class="font-semibold mb-3 gold-text">Discount Code</h3>
-                    <div class="flex space-x-2">
-                        <input type="text" placeholder="Enter discount code" 
-                               class="flex-1 bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:border-yellow-500 focus:outline-none">
-                        <button class="gold-gradient text-black font-semibold px-6 py-2 rounded-lg hover:opacity-90 transition-opacity">
-                            Apply
-                        </button>
-                    </div>
-                </div>
+            <!-- Checkout Content -->
+            <div class="checkout-content">
+                <!-- Error/Success Messages -->
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
 
                 <!-- Order Summary -->
-                <div class="dark-card rounded-lg p-6">
-                    <h3 class="font-semibold mb-4 gold-text">Order Summary</h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Subtotal</span>
-                            <span id="subtotal">$3.99</span>
+                <div class="order-summary">
+                    <h3 style="color: #ffd700; font-size: 1.3rem; margin-bottom: 1.5rem; font-weight: 600;">
+                        <i class="fas fa-shopping-cart" style="margin-right: 0.5rem;"></i>Order Summary
+                    </h3>
+                    <div id="orderItems">
+                        <!-- Order items will be populated by JavaScript -->
+                    </div>
+                    <div class="total-section">
+                        <div class="total-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">$0.00</span>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="text-gray-400">Tax</span>
-                            <span>$0.00</span>
+                        <div class="total-row">
+                            <span>Tax:</span>
+                            <span id="tax">$0.00</span>
                         </div>
-                        <div class="border-t border-gray-600 pt-3">
-                            <div class="flex justify-between text-xl font-bold gold-text">
-                                <span>Total</span>
-                                <span id="total">$3.99</span>
-                            </div>
+                        <div class="total-row total-final">
+                            <span>Total:</span>
+                            <span id="total">$0.00</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Terms -->
-                <div class="flex items-start space-x-3">
-                    <input type="checkbox" id="terms" class="mt-1 accent-yellow-500">
-                    <label for="terms" class="text-sm text-gray-400">
-                        I agree to the <a href="#" class="text-yellow-500 hover:underline">Terms of Service</a> and 
-                        <a href="#" class="text-yellow-500 hover:underline">Privacy Policy</a>. 
-                        Digital content will be delivered immediately after payment.
-                    </label>
-                </div>
-            </div>
-
-            <!-- Right Column - Payment -->
-            <div class="space-y-6">
-                <h2 class="orbitron text-2xl font-bold gold-text glow">
-                    <i class="fas fa-credit-card mr-3"></i>Payment Method
-                </h2>
-
-                <!-- Customer Info -->
-                <div class="dark-card rounded-lg p-6">
-                    <h3 class="font-semibold mb-4 gold-text">Customer Information</h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <input type="email" id="customerEmail" placeholder="your-email@example.com" 
-                                   class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-500 focus:outline-none">
+                <!-- Payment Methods -->
+                <div class="payment-methods">
+                    <div class="payment-method" onclick="selectPaymentMethod('paypal')" id="paypalMethod">
+                        <div class="payment-icon paypal-icon">
+                            <i class="fab fa-paypal"></i>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Discord Username</label>
-                            <input type="text" id="discordUsername" placeholder="username#1234" 
-                                   class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">In-Game Username</label>
-                            <input type="text" id="gameUsername" placeholder="Your Rust username" 
-                                   class="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-500 focus:outline-none">
-                        </div>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">PayPal</h4>
+                        <p style="color: #ccc; font-size: 0.9rem; margin: 0;">Pay with PayPal account or card</p>
                     </div>
-                </div>
-
-                <!-- Payment Options -->
-                <div class="dark-card rounded-lg p-6">
-                    <h3 class="font-semibold mb-4 gold-text">Payment Options</h3>
                     
-                    <!-- Payment Method Selector -->
-                    <div class="space-y-4">
-                        <!-- PayPal Option -->
-                        <div class="payment-option dark-card rounded-lg p-4 cursor-pointer" onclick="togglePayment('paypal')">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="w-8 h-8">
-                                    <span class="font-semibold">PayPal</span>
-                                </div>
-                                <i class="fas fa-chevron-down text-yellow-500 transition-transform" id="paypal-arrow"></i>
-                            </div>
-                            <div class="payment-collapsed mt-4" id="paypal-content">
-                                <div id="paypal-button-container" class="w-full"></div>
-                            </div>
+                    <div class="payment-method" onclick="selectPaymentMethod('stripe')" id="stripeMethod">
+                        <div class="payment-icon stripe-icon">
+                            <i class="fas fa-credit-card"></i>
                         </div>
-
-                        <!-- Stripe Option -->
-                        <div class="payment-option dark-card rounded-lg p-4 cursor-pointer" onclick="togglePayment('stripe')">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <img src="https://stripe.com/img/v3/home/twitter.png" alt="Stripe" class="w-8 h-8">
-                                    <span class="font-semibold">Credit Card (Stripe)</span>
-                                </div>
-                                <i class="fas fa-chevron-down text-yellow-500 transition-transform" id="stripe-arrow"></i>
-                            </div>
-                            <div class="payment-collapsed mt-4" id="stripe-content">
-                                <form id="payment-form" class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-300 mb-2">Card Information</label>
-                                        <div id="card-element" class="StripeElement"></div>
-                                        <div id="card-errors" class="text-red-400 text-sm mt-2" role="alert"></div>
-                                    </div>
-                                    <button type="submit" id="submit-button" 
-                                            class="w-full gold-gradient text-black font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <span id="button-text">Pay with Card</span>
-                                        <div id="spinner" class="hidden">
-                                            <i class="fas fa-spinner fa-spin"></i>
-                                        </div>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                        <h4 style="color: #fff; margin-bottom: 0.5rem;">Credit Card</h4>
+                        <p style="color: #ccc; font-size: 0.9rem; margin: 0;">Pay with any major credit card</p>
                     </div>
                 </div>
 
-                <!-- Security Notice -->
-                <div class="flex items-center space-x-3 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                    <i class="fas fa-shield-alt text-green-400 text-xl"></i>
-                    <div>
-                        <p class="font-semibold text-green-400">Secure Payment</p>
-                        <p class="text-sm text-gray-400">Your payment information is encrypted and secure</p>
-                    </div>
+                <!-- Payment Forms -->
+                <div id="paypalForm" style="display: none;">
+                    <div id="paypal-button-container"></div>
+                </div>
+
+                <div id="stripeForm" style="display: none;">
+                    <form id="payment-form">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-input" required placeholder="your@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Game ID / Username</label>
+                            <input type="text" id="gameId" class="form-input" required placeholder="Your Rust game ID">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Card Information</label>
+                            <div id="card-element" class="card-element">
+                                <!-- Stripe Card Element will be inserted here -->
+                            </div>
+                            <div id="card-errors" style="color: #ff4757; margin-top: 0.5rem; font-size: 0.9rem;"></div>
+                        </div>
+                        
+                        <button type="submit" id="stripeSubmit" class="pay-button">
+                            <i class="fas fa-lock" style="margin-right: 0.5rem;"></i>Pay Securely
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="config.js"></script>
     <script>
-        // Initialize Stripe (will be set from environment variable)
-        let stripe;
+        // Configuration from payment-config.js
+        const STRIPE_PUBLISHABLE_KEY = window.PAYMENT_CONFIG?.stripe?.publishableKey || 'pk_test_your_stripe_publishable_key';
+        const PAYPAL_CLIENT_ID = window.PAYMENT_CONFIG?.paypal?.clientId || 'your_paypal_client_id';
         
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const itemType = urlParams.get('item');
-        const price = urlParams.get('price');
-        const itemName = urlParams.get('name');
-        const cartData = urlParams.get('cart');
-
-        // Handle cart items or single item
-        if (cartData) {
-            // Cart checkout
-            const cartItems = JSON.parse(decodeURIComponent(cartData));
-            renderCartItems(cartItems);
-        } else if (itemType && price && itemName) {
-            // Single item checkout
-            document.getElementById('itemName').textContent = itemName;
-            document.getElementById('itemPrice').textContent = `$${(price / 100).toFixed(2)}`;
-            document.getElementById('subtotal').textContent = `$${(price / 100).toFixed(2)}`;
-            document.getElementById('total').textContent = `$${(price / 100).toFixed(2)}`;
+        // Initialize Stripe
+        const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        const elements = stripe.elements();
+        
+        // Create card element
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#ffffff',
+                    '::placeholder': {
+                        color: '#aab7c4'
+                    }
+                },
+                invalid: {
+                    color: '#ff4757',
+                    iconColor: '#ff4757'
+                }
+            }
+        });
+        
+        // Mount card element
+        cardElement.mount('#card-element');
+        
+        // Handle card errors
+        cardElement.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+        
+        // Global variables
+        let selectedPaymentMethod = null;
+        let orderItems = [];
+        let orderTotal = 0;
+        
+        // Initialize checkout
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load PayPal SDK dynamically
+            loadPayPalSDK();
+            
+            loadOrderFromCart();
+            setupEventListeners();
+        });
+        
+        function loadPayPalSDK() {
+            const paypalScript = document.getElementById('paypal-sdk');
+            paypalScript.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
         }
-
-        function renderCartItems(cartItems) {
-            const orderItemsContainer = document.querySelector('.order-items');
-            if (!orderItemsContainer) return;
-
-            let total = 0;
-            const itemsHtml = cartItems.map(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                return `
-                    <div class="flex items-center justify-between p-4 bg-gradient-to-r from-yellow-500/10 to-transparent rounded-lg border border-yellow-500/20">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-boxes text-2xl text-black"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-lg">${item.name}</h3>
-                                <p class="text-gray-400 text-sm">Quantity: ${item.quantity}</p>
-                            </div>
+        
+        function loadOrderFromCart() {
+            // Load cart items from localStorage
+            const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+            orderItems = cartItems;
+            
+            // Calculate totals
+            const subtotal = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
+            const tax = subtotal * 0.08; // 8% tax
+            orderTotal = subtotal + tax;
+            
+            // Update UI
+            updateOrderSummary();
+            updateTotals(subtotal, tax, orderTotal);
+        }
+        
+        function updateOrderSummary() {
+            const orderItemsContainer = document.getElementById('orderItems');
+            
+            if (orderItems.length === 0) {
+                orderItemsContainer.innerHTML = '<p style="color: #ccc; text-align: center;">No items in cart</p>';
+                return;
+            }
+            
+            orderItemsContainer.innerHTML = orderItems.map(item => `
+                <div class="item-card">
+                    <div class="item-info">
+                        <div class="item-icon">
+                            <i class="fas ${getItemIcon(item.item.type || item.item.resourceType)}"></i>
                         </div>
-                        <div class="text-right">
-                            <p class="text-2xl font-bold gold-text">$${(itemTotal / 100).toFixed(2)}</p>
+                        <div>
+                            <h4 style="color: #fff; margin: 0 0 0.2rem 0;">${item.item.name}</h4>
+                            <p style="color: #ccc; margin: 0; font-size: 0.9rem;">Qty: ${item.quantity}</p>
                         </div>
                     </div>
-                `;
-            }).join('');
-
-            orderItemsContainer.innerHTML = itemsHtml;
-            document.getElementById('subtotal').textContent = `$${(total / 100).toFixed(2)}`;
+                    <div style="text-align: right;">
+                        <div style="color: #ffd700; font-weight: 700; font-size: 1.1rem;">$${(item.subtotal / 100).toFixed(2)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updateTotals(subtotal, tax, total) {
+            document.getElementById('subtotal').textContent = `$${(subtotal / 100).toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${(tax / 100).toFixed(2)}`;
             document.getElementById('total').textContent = `$${(total / 100).toFixed(2)}`;
         }
-
-        // Payment toggle function - independent toggles
-        function togglePayment(method) {
-            const paypalContent = document.getElementById('paypal-content');
-            const stripeContent = document.getElementById('stripe-content');
-            const paypalArrow = document.getElementById('paypal-arrow');
-            const stripeArrow = document.getElementById('stripe-arrow');
-
+        
+        function getItemIcon(type) {
+            const icons = {
+                'resource-bundle': 'fas fa-boxes',
+                'raid-kit': 'fas fa-bomb',
+                'vip': 'fas fa-crown',
+                'vip_plus': 'fas fa-star',
+                'wood': 'fas fa-tree',
+                'stone': 'fas fa-mountain',
+                'metal': 'fas fa-cog',
+                'cloth': 'fas fa-tshirt',
+                'scrap': 'fas fa-recycle',
+                'hqm': 'fas fa-gem',
+                'fuel': 'fas fa-fire'
+            };
+            return icons[type] || 'fas fa-box';
+        }
+        
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
+            document.getElementById(method + 'Method').classList.add('selected');
+            
+            // Show/hide forms
+            document.getElementById('paypalForm').style.display = method === 'paypal' ? 'block' : 'none';
+            document.getElementById('stripeForm').style.display = method === 'stripe' ? 'block' : 'none';
+            
+            // Initialize PayPal if selected
             if (method === 'paypal') {
-                // Toggle PayPal independently
-                const isPaypalExpanded = paypalContent.classList.contains('payment-expanded');
-                
-                if (isPaypalExpanded) {
-                    // Collapse PayPal
-                    paypalContent.classList.remove('payment-expanded');
-                    paypalContent.classList.add('payment-collapsed');
-                    paypalArrow.style.transform = '';
-                } else {
-                    // Expand PayPal
-                    paypalContent.classList.remove('payment-collapsed');
-                    paypalContent.classList.add('payment-expanded');
-                    paypalArrow.style.transform = 'rotate(180deg)';
-                    
-                    // Initialize PayPal when expanded
-                    setTimeout(initializePayPal, 100);
-                }
-            } else if (method === 'stripe') {
-                // Toggle Stripe independently
-                const isStripeExpanded = stripeContent.classList.contains('payment-expanded');
-                
-                if (isStripeExpanded) {
-                    // Collapse Stripe
-                    stripeContent.classList.remove('payment-expanded');
-                    stripeContent.classList.add('payment-collapsed');
-                    stripeArrow.style.transform = '';
-                } else {
-                    // Expand Stripe
-                    stripeContent.classList.remove('payment-collapsed');
-                    stripeContent.classList.add('payment-expanded');
-                    stripeArrow.style.transform = 'rotate(180deg)';
-                    
-                    // Initialize Stripe when expanded
-                    setTimeout(initializeStripe, 100);
-                }
+                initializePayPal();
             }
         }
-
-        // Initialize PayPal function
+        
         function initializePayPal() {
-            const container = document.getElementById('paypal-button-container');
-            if (container) {
-                // Get PayPal client ID from server
-                fetch('/.netlify/functions/get-payment-config')
-                    .then(response => response.json())
-                    .then(config => {
-                        if (config.paypalClientId) {
-                            // Load PayPal SDK with client ID from server
-                            const script = document.createElement('script');
-                            script.src = `https://www.paypal.com/sdk/js?client-id=${config.paypalClientId}&currency=USD`;
-                            script.onload = function() {
-                                if (typeof paypal !== 'undefined') {
-                                    paypal.Buttons({
-                                        createOrder: function(data, actions) {
-                                            return actions.order.create({
-                                                purchase_units: [{
-                                                    amount: {
-                                                        value: (price / 100).toFixed(2)
-                                                    },
-                                                    description: itemName
-                                                }]
-                                            });
-                                        },
-                                        onApprove: function(data, actions) {
-                                            return actions.order.capture().then(function(details) {
-                                                // Payment successful
-                                                showPaymentSuccess(details);
-                                            });
-                                        },
-                                        onError: function(err) {
-                                            console.error('PayPal error:', err);
-                                            showError('Payment failed. Please try again.');
-                                        }
-                                    }).render('#paypal-button-container');
-                                }
-                            };
-                            document.head.appendChild(script);
-                        } else {
-                            container.innerHTML = '<div class="text-yellow-400 p-4 text-center">PayPal configuration not found. Please check environment variables.</div>';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading PayPal config:', error);
-                        container.innerHTML = '<div class="text-red-400 p-4 text-center">Error loading PayPal. Please try again.</div>';
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: (orderTotal / 100).toFixed(2)
+                            },
+                            description: 'Rust Store Purchase',
+                            custom_id: generateOrderId()
+                        }]
                     });
-            }
-        }
-
-        // Initialize Stripe when Stripe option is selected
-        function initializeStripe() {
-            if (!stripe) {
-                // Get Stripe publishable key from server
-                fetch('/.netlify/functions/get-payment-config')
-                    .then(response => response.json())
-                    .then(config => {
-                        if (config.stripePublishableKey) {
-                            stripe = Stripe(config.stripePublishableKey);
-                            const elements = stripe.elements();
-
-                            // Create card element
-                            const card = elements.create('card', {
-                                style: {
-                                    base: {
-                                        fontSize: '16px',
-                                        color: '#ffffff',
-                                        '::placeholder': {
-                                            color: '#9ca3af'
-                                        }
-                                    }
-                                }
-                            });
-
-                            // Mount card element
-                            card.mount('#card-element');
-
-                            // Handle card errors
-                            card.addEventListener('change', function(event) {
-                                const displayError = document.getElementById('card-errors');
-                                if (event.error) {
-                                    displayError.textContent = event.error.message;
-                                } else {
-                                    displayError.textContent = '';
-                                }
-                            });
-
-                            // Handle Stripe form submission
-                            const form = document.getElementById('payment-form');
-                            form.addEventListener('submit', function(event) {
-                                event.preventDefault();
-                                
-                                if (!document.getElementById('terms').checked) {
-                                    alert('Please agree to the terms and conditions.');
-                                    return;
-                                }
-
-                                const customerEmail = document.getElementById('customerEmail').value;
-                                const discordUsername = document.getElementById('discordUsername').value;
-                                const gameUsername = document.getElementById('gameUsername').value;
-
-                                if (!customerEmail || !discordUsername || !gameUsername) {
-                                    alert('Please fill in all customer information fields.');
-                                    return;
-                                }
-
-                                setLoading(true);
-
-                                // Create payment intent on your server
-                                fetch('/.netlify/functions/create-payment-intent', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        amount: price,
-                                        itemType: itemType,
-                                        itemName: itemName,
-                                        customerEmail: customerEmail,
-                                        discordUsername: discordUsername,
-                                        gameUsername: gameUsername
-                                    })
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if (data.error) {
-                                        throw new Error(data.error);
-                                    }
-                                    return stripe.confirmCardPayment(data.clientSecret, {
-                                        payment_method: {
-                                            card: card,
-                                            billing_details: {
-                                                email: customerEmail,
-                                                name: gameUsername
-                                            }
-                                        }
-                                    });
-                                })
-                                .then(result => {
-                                    if (result.error) {
-                                        throw new Error(result.error.message);
-                                    } else {
-                                        showPaymentSuccess(result.paymentIntent);
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    showError(error.message);
-                                })
-                                .finally(() => {
-                                    setLoading(false);
-                                });
-                            });
-                        } else {
-                            const cardElement = document.getElementById('card-element');
-                            if (cardElement) {
-                                cardElement.innerHTML = '<div class="text-yellow-400 p-4 text-center">Stripe configuration not found. Please check environment variables.</div>';
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error loading Stripe config:', error);
-                        const cardElement = document.getElementById('card-element');
-                        if (cardElement) {
-                            cardElement.innerHTML = '<div class="text-red-400 p-4 text-center">Error loading Stripe. Please try again.</div>';
-                        }
-                    });
-            }
-        }
-
-        // Initialize Stripe when Stripe option is clicked
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add click listener for Stripe initialization
-            document.querySelector('[onclick="togglePayment(\'stripe\')"]').addEventListener('click', function() {
-                setTimeout(initializeStripe, 100); // Small delay to ensure DOM is ready
-            });
-        });
-
-        function setLoading(isLoading) {
-            const submitButton = document.getElementById('submit-button');
-            const buttonText = document.getElementById('button-text');
-            const spinner = document.getElementById('spinner');
-
-            if (isLoading) {
-                submitButton.disabled = true;
-                buttonText.style.display = 'none';
-                spinner.classList.remove('hidden');
-            } else {
-                submitButton.disabled = false;
-                buttonText.style.display = 'inline';
-                spinner.classList.add('hidden');
-            }
-        }
-
-        function getCurrentUserId() {
-            const user = JSON.parse(localStorage.getItem('rustStoreUser') || '{}');
-            if (user.steamId) return user.steamId;
-            if (user.discordId) return user.discordId;
-            return 'guest_' + Date.now();
-        }
-
-        function showPaymentSuccess(details) {
-            // Get customer information
-            const customerEmail = document.getElementById('customerEmail').value;
-            const discordUsername = document.getElementById('discordUsername').value;
-            const gameUsername = document.getElementById('gameUsername').value;
-            
-            // Determine payment method and transaction ID
-            const paymentMethod = details.payment_method_types ? 'Credit Card (Stripe)' : 'PayPal';
-            const transactionId = details.id || details.paymentID || 'N/A';
-            
-            // Send purchase ticket email
-            fetch('/.netlify/functions/send-purchase-ticket', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    customerEmail: customerEmail,
-                    discordUsername: discordUsername,
-                    gameUsername: gameUsername,
-                    itemName: itemName,
-                    itemPrice: price,
-                    paymentMethod: paymentMethod,
-                    transactionId: transactionId
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Payment successful! Your kit will be delivered shortly. A confirmation email has been sent to your inbox.');
-                } else {
-                    console.error('Failed to send email:', data.error);
-                    alert('Payment successful! Your kit will be delivered shortly. (Email notification failed)');
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        handlePaymentSuccess(details, 'paypal');
+                    });
+                },
+                onError: function(err) {
+                    handlePaymentError(err, 'PayPal');
                 }
-            })
-            .catch(error => {
-                console.error('Error sending email:', error);
-                alert('Payment successful! Your kit will be delivered shortly. (Email notification failed)');
-            })
-            .finally(() => {
-                window.location.href = 'index.html';
+            }).render('#paypal-button-container');
+        }
+        
+        function setupEventListeners() {
+            // Stripe form submission
+            const form = document.getElementById('payment-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                processStripePayment();
             });
         }
-
+        
+        async function processStripePayment() {
+            const submitButton = document.getElementById('stripeSubmit');
+            const email = document.getElementById('email').value;
+            const gameId = document.getElementById('gameId').value;
+            
+            if (!email || !gameId) {
+                showError('Please fill in all required fields');
+                return;
+            }
+            
+            // Disable button and show loading
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="loading"></span> Processing...';
+            
+            try {
+                // Create payment intent on your server
+                const response = await fetch('/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: orderTotal,
+                        email: email,
+                        gameId: gameId,
+                        items: orderItems
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Payment failed');
+                }
+                
+                // Confirm payment with Stripe
+                const { error, paymentIntent } = await stripe.confirmCardPayment(data.clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            email: email
+                        }
+                    }
+                });
+                
+                if (error) {
+                    throw new Error(error.message);
+                }
+                
+                // Payment successful
+                handlePaymentSuccess(paymentIntent, 'stripe');
+                
+            } catch (error) {
+                handlePaymentError(error, 'Stripe');
+            } finally {
+                // Re-enable button
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-lock" style="margin-right: 0.5rem;"></i>Pay Securely';
+            }
+        }
+        
+        function handlePaymentSuccess(paymentDetails, method) {
+            // Clear cart
+            localStorage.removeItem('cartItems');
+            
+            // Show success message
+            showSuccess(`Payment successful! Your items will be delivered in-game. Transaction ID: ${paymentDetails.id || paymentDetails.payment_intent}`);
+            
+            // Redirect to success page or back to store
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 3000);
+        }
+        
+        function handlePaymentError(error, method) {
+            showError(`${method} payment failed: ${error.message}`);
+        }
+        
         function showError(message) {
-            alert('Error: ' + message);
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Hide success message if showing
+            document.getElementById('successMessage').style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            // Hide error message if showing
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function generateOrderId() {
+            return 'order_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
     </script>
 </body>

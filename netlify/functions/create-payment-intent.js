@@ -6,30 +6,47 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { amount, currency = 'usd' } = JSON.parse(event.body);
+    const { amount, email, gameId, items } = JSON.parse(event.body);
 
+    // Validate required fields
+    if (!amount || !email || !gameId) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Missing required fields: amount, email, gameId' })
+      };
+    }
+
+    // Create payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency,
-      automatic_payment_methods: {
-        enabled: true,
+      amount: amount, // Amount in cents
+      currency: 'usd',
+      metadata: {
+        email: email,
+        gameId: gameId,
+        items: JSON.stringify(items.map(item => ({
+          name: item.item.name,
+          type: item.item.type || item.item.resourceType,
+          quantity: item.quantity,
+          price: item.item.price
+        })))
       },
+      receipt_email: email,
+      description: `Rust Store Purchase - ${items.map(item => item.item.name).join(', ')}`
     });
 
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         clientSecret: paymentIntent.client_secret,
-      }),
+        paymentIntentId: paymentIntent.id
+      })
     };
+
   } catch (error) {
     console.error('Error creating payment intent:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to create payment intent' }),
+      body: JSON.stringify({ error: 'Failed to create payment intent' })
     };
   }
 }; 

@@ -643,33 +643,14 @@ function hideCart() {
 }
 
 async function checkout() {
-    if (!currentUser) {
-        showAuthModal(true);
-        return;
-    }
-    
     if (cartItems.length === 0) {
         showError('Cart is empty');
         return;
     }
     
-    // In a real implementation, you would integrate with a payment processor
-    // For now, we'll simulate a successful payment
-    try {
-        const response = await apiRequest('/store/checkout', {
-            method: 'POST',
-            body: JSON.stringify({
-                payment_method: 'creditcard',
-                payment_token: 'simulated_payment_token'
-            })
-        });
-        
-        showSuccess('Purchase successful! Items have been added to your inventory.');
-        hideCart();
-        await loadCart();
-    } catch (error) {
-        showError('Checkout failed');
-    }
+    // Redirect to checkout page with cart data
+    const cartData = encodeURIComponent(JSON.stringify(cartItems));
+    window.location.href = `checkout.html?cart=${cartData}`;
 }
 
 // Auth Functions
