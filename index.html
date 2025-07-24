@@ -1256,32 +1256,44 @@
     <!-- automated-payment-system.js removed - using new checkout system -->
 
     <script>
-        // ULTRA AGGRESSIVE HIDE - Remove sections from DOM completely
+        // NUCLEAR OPTION - Completely remove sections from DOM
         (function() {
             const sections = ['vipSection', 'resourceKitsSection', 'raidingKitsSection', 'storeSection'];
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (section) {
-                    // Move section completely out of view and hide it
-                    section.style.display = 'none';
-                    section.style.visibility = 'hidden';
-                    section.style.opacity = '0';
-                    section.style.position = 'absolute';
-                    section.style.left = '-9999px';
-                    section.style.top = '-9999px';
-                    section.style.zIndex = '-9999';
-                    section.style.pointerEvents = 'none';
-                    
-                    // Also hide the parent container if it exists
-                    const parent = section.parentElement;
-                    if (parent && parent.classList.contains('section-container')) {
-                        parent.style.display = 'none';
-                    }
+                    // Store the section in a global variable so we can restore it later
+                    window['stored_' + id] = section;
+                    // Remove from DOM completely
+                    section.remove();
                 }
             });
             
             // Force body to only show video background
             document.body.style.overflow = 'hidden';
+            
+            // Override any show functions to restore sections first
+            window.originalToggleSection = window.toggleSection;
+            window.toggleSection = function(sectionName) {
+                const sectionId = sectionName + 'Section';
+                const storedSection = window['stored_' + sectionId];
+                if (storedSection && !document.getElementById(sectionId)) {
+                    // Restore the section to DOM
+                    document.body.appendChild(storedSection);
+                    storedSection.style.display = 'block';
+                    storedSection.style.visibility = 'visible';
+                    storedSection.style.opacity = '1';
+                    storedSection.style.position = 'relative';
+                    storedSection.style.left = 'auto';
+                    storedSection.style.top = 'auto';
+                    storedSection.style.zIndex = '10';
+                    storedSection.style.pointerEvents = 'auto';
+                }
+                // Call original function
+                if (window.originalToggleSection) {
+                    window.originalToggleSection(sectionName);
+                }
+            };
         })();
     </script>
     <script src="script.js"></script>
