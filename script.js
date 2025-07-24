@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Kit contents display functionality
 function setupKitContents() {
-    const kitCards = document.querySelectorAll('.raiding-kit-card');
+    const kitCards = document.querySelectorAll('.raiding-kit-card, .resource-kit-card');
     
     kitCards.forEach(card => {
         const contentsDiv = card.querySelector('.kit-contents');
